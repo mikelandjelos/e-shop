@@ -3,8 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './user/user.module';
-
+import { GeoController } from './geo/controllers/geo/geo.controller';
+import { GeoService } from './geo/services/geo/geo.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,7 +22,7 @@ import { UserModule } from './user/user.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    CustomerModule,
+    
   ],
   controllers: [AppController, GeoController],
   providers: [AppService, GeoService],
