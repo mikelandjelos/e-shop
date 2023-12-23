@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { GeoService } from './geo/services/geo/geo.service';
+import { GeoController } from './geo/controllers/geo/geo.controller';
 
 @Module({
   imports: [
@@ -24,8 +26,8 @@ import { UserModule } from './user/user.module';
     }),
     UserModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, GeoController],
+  providers: [AppService, GeoService],
 })
 export class AppModule {
   constructor() {

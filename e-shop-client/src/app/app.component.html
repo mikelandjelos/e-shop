@@ -1,15 +1,2 @@
-<h1>How to Integrate Google Maps in Angular 17 - ItSolutionStuff.com</h1>
-
-<google-map
-  height="500px"
-  width="900px"
-  [center]="center"
-  [zoom]="zoom"
-  (mapClick)="moveMap($event)"
-  (mapMousemove)="move($event)"
->
-</google-map>
-
-<div>Latitude: {{ display?.lat }}</div>
-
-<div>Longitude: {{ display?.lng }}</div>
+<!-- app.component.html -->
+<app-geo></app-geo>
