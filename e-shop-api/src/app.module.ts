@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { GeoController } from './geo/controllers/geo/geo.controller';
 import { GeoService } from './geo/services/geo/geo.service';
+import { OrderModule } from './order/order.module';
+import { CustomerModule } from './customer/customer.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,13 +24,12 @@ import { GeoService } from './geo/services/geo/geo.service';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    
+    OrderModule,
+    CustomerModule,
   ],
   controllers: [AppController, GeoController],
   providers: [AppService, GeoService],
 })
 export class AppModule {
-  constructor() {
-    console.log(process.env.POSTGRES_HOST);
-  }
+  constructor() {}
 }
