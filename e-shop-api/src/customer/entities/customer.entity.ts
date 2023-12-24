@@ -7,6 +7,9 @@ export class Customer {
   id: string;
 
   @Column({ default: '' })
+  username: string;
+
+  @Column({ default: '' })
   first_name: string;
 
   @Column({ default: '' })

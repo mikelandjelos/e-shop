@@ -7,6 +7,7 @@ import { GeoController } from './geo/controllers/geo/geo.controller';
 import { GeoService } from './geo/services/geo/geo.service';
 import { OrderModule } from './order/order.module';
 import { CustomerModule } from './customer/customer.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,6 +27,7 @@ import { CustomerModule } from './customer/customer.module';
     }),
     OrderModule,
     CustomerModule,
+    AuthModule,
   ],
   controllers: [AppController, GeoController],
   providers: [AppService, GeoService],

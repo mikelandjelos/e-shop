@@ -1,6 +1,8 @@
 export class CreateCustomerDto {
   id: string;
 
+  username: string;
+
   first_name: string;
 
   last_name: string;
