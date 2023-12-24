@@ -1,4 +1,5 @@
 import { Order } from 'src/order/entities/order.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('customer')
@@ -6,23 +7,29 @@ export class Customer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ default: '' })
+  @Column({ type: 'varchar', name: 'username', length: 50 })
   username: string;
 
-  @Column({ default: '' })
-  first_name: string;
+  @Column({ type: 'varchar', name: 'first_name', length: 50 })
+  firstName: string;
 
-  @Column({ default: '' })
-  last_name: string;
+  @Column({ type: 'varchar', name: 'last_name', length: 50 })
+  lastName: string;
 
-  @Column({ default: '' })
+  @Column({ type: 'varchar', name: 'email', length: 50 })
   email: string;
 
-  @Column({ default: '' })
+  @Column({ type: 'varchar', name: 'password', length: 50 })
   password: string;
 
-  @Column({ default: '' })
-  phone_number: string;
-  @OneToMany(() => Order, (orderEntity) => orderEntity.customer)
+  @Column({ type: 'varchar', name: 'phone_number', length: 50 })
+  phoneNumber: string;
+
+  // ADDRESS - REDIS???
+
+  @OneToMany(() => Order, (order) => order.customer)
   orders: Order[];
+
+  @OneToMany(() => Payment, (payment) => payment.customer)
+  payments: Payment[];
 }

@@ -7,10 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
-  imports: [CustomerModule,JwtModule.register({
-    secret:'test',
-    signOptions:{expiresIn:'1d'}
-  })],
+  imports: [
+    CustomerModule,
+    JwtModule.register({
+      secret: 'test',
+      signOptions: { expiresIn: '1d' },
+    }),
+  ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
 })

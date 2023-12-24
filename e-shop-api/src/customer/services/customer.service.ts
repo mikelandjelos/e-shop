@@ -12,10 +12,15 @@ export class CustomerService {
     @InjectRepository(Customer)
     public readonly customerRepository: Repository<Customer>,
   ) {}
-  async create(createCustomerDto: CreateCustomerDto): Promise<CreateCustomerDto> {
+  async create(
+    createCustomerDto: CreateCustomerDto,
+  ): Promise<CreateCustomerDto> {
     const salt = await bcrypt.genSalt();
-    createCustomerDto.password = await bcrypt.hash(createCustomerDto.password,salt);
-    return (this.customerRepository.save(createCustomerDto));
+    createCustomerDto.password = await bcrypt.hash(
+      createCustomerDto.password,
+      salt,
+    );
+    return this.customerRepository.save(createCustomerDto);
   }
 
   findAll() {
@@ -25,7 +30,7 @@ export class CustomerService {
   findOne(id: number) {
     return `This action returns a #${id} customer`;
   }
- async findUserByUsername(username: string) {
+  async findUserByUsername(username: string) {
     return await this.customerRepository.findOne({ where: { username } });
   }
   update(id: number, updateCustomerDto: UpdateCustomerDto) {

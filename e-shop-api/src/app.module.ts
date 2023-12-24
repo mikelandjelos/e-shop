@@ -8,6 +8,11 @@ import { GeoService } from './geo/services/geo/geo.service';
 import { OrderModule } from './order/order.module';
 import { CustomerModule } from './customer/customer.module';
 import { AuthModule } from './auth/auth.module';
+import { ProductModule } from './product/product.module';
+import { CategoryModule } from './category/category.module';
+import { WarehouseModule } from './warehouse/warehouse.module';
+import { OrderItemModule } from './order-item/order-item.module';
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,9 +30,14 @@ import { AuthModule } from './auth/auth.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    OrderModule,
-    CustomerModule,
     AuthModule,
+    CustomerModule,
+    PaymentModule,
+    OrderModule,
+    OrderItemModule,
+    ProductModule,
+    CategoryModule,
+    WarehouseModule,
   ],
   controllers: [AppController, GeoController],
   providers: [AppService, GeoService],
