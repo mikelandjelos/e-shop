@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres
+    container_name: nbp-postgres
+    environment:
+      POSTGRES_PASSWORD: nbp
+    ports:
+      - "5442:5432"
+
+  redis-stack-durable:
+    image: redis/redis-stack-server:latest
+    container_name: nbp-redis-stack-durable
+    ports:
+      - "6389:6379"
+    volumes:
+      - ./redis/data/durable/:/data/
+      - ./redis/config/redis-stack-durable.conf:/redis-stack.conf
+
+  redis-stack-cache:
+    image: redis/redis-stack-server:latest
+    container_name: nbp-redis-stack-cache
+    ports:
+      - "6390:6379"
+    volumes:
+      - ./redis/data/cache/:/data/
+      - ./redis/config/redis-stack-cache.conf:/redis-stack.conf
