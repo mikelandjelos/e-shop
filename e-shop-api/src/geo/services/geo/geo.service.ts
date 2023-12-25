@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { RedisService } from 'nestjs-redis';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class GeoService {
-  constructor(private readonly redisService: RedisService) {}
+  constructor() {}
   async addLocationToGeoSet(
     name: string,
     longitude: number,
     lattitude: number,
     member: string,
   ): Promise<number> {
-    const redisCacheClient = await this.redisService.getClient('cache');
-    return redisCacheClient.geoadd(name, longitude, lattitude, member);
+    const redis = new Redis({ host: 'localhost', port: 6390 });
+    return redis.geoadd(name, longitude, lattitude, member);
   }
   async getDistanceBetweenLocations(
     geoSetName: string,
     member1: string,
     member2: string,
   ): Promise<string> {
-    const redisCacheClient = await this.redisService.getClient('cache');
-    return await redisCacheClient.geodist(geoSetName, member1, member2);
+    const redis = new Redis({ host: 'localhost', port: 6390 });
+    return await redis.geodist(geoSetName, member1, member2);
   }
 }

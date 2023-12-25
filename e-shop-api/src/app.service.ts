@@ -1,22 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { RedisService } from 'nestjs-redis';
-import { RedisClientNames } from './globals/redis-clients';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class AppService {
-  constructor(public readonly redisService: RedisService) {}
+  constructor() {}
 
   async pingDurable(): Promise<string> {
-    const durableRedis = await this.redisService.getClient(
-      RedisClientNames.DURABLE,
-    );
-    return await durableRedis.ping();
+    const redis = new Redis({ host: 'localhost', port: 6389 });
+    return `${await redis.ping()} from 6389`;
   }
 
   async pingCache(): Promise<string> {
-    const cacheRedis = await this.redisService.getClient(
-      RedisClientNames.CACHE,
-    );
-    return await cacheRedis.ping();
+    const redis = new Redis({ host: 'localhost', port: 6390 });
+    return `${await redis.ping()} from 6390`;
   }
 }

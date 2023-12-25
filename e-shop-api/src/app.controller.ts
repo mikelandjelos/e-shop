@@ -7,15 +7,11 @@ export class AppController {
 
   @Get('/ping/durable')
   async pingDurable(): Promise<string> {
-    return `${await this.appService.pingDurable()} from ${
-      process.env.REDIS_DURABLE_PORT
-    }`;
+    return await this.appService.pingDurable();
   }
 
   @Get('/ping/cache')
   async pingCache(): Promise<string> {
-    return `${await this.appService.pingCache()} from ${
-      process.env.REDIS_CACHE_PORT
-    }`;
+    return await this.appService.pingCache();
   }
 }
