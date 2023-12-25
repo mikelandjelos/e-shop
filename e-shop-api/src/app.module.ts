@@ -13,6 +13,7 @@ import { CategoryModule } from './category/category.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { OrderItemModule } from './order-item/order-item.module';
 import { PaymentModule } from './payment/payment.module';
+import { RedisModule } from 'nestjs-redis';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,6 +31,18 @@ import { PaymentModule } from './payment/payment.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    RedisModule.register([
+      {
+        name: process.env.REDIS_DURABLE_NAME,
+        host: process.env.REDIS_DURABLE_HOST,
+        port: parseInt(process.env.REDIS_DURABLE_PORT),
+      },
+      {
+        name: process.env.REDIS_CACHE_NAME,
+        host: process.env.REDIS_CACHE_HOST,
+        port: parseInt(process.env.REDIS_DURABLE_PORT),
+      },
+    ]),
     AuthModule,
     CustomerModule,
     PaymentModule,
