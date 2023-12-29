@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import {Component } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GeoService } from '../services/geo.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -12,19 +14,45 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 })
 export class LoginComponent {
   loginForm:FormGroup;
-  constructor(private loginService:LoginService,private formBuilder:FormBuilder){
+  constructor(private loginService:LoginService,private formBuilder:FormBuilder,private geoService:GeoService){
     this.loginForm=this.formBuilder.group({firstName:'',lastName:'',username:'',phoneNumber:'',location:'',password:''});
   }
-  
+  suggestions: string[] = [];
   isGx = false;
   isTxr = false;
   isHiddenC1 = false;
   isHiddenC2 = true;
   isTxl = false;
   isZ200 = false;
-  password :string = '';
- 
+  selectSuggestion(suggestion:string):void{
+    console.log(suggestion)
+    this.loginForm.get('location')?.setValue(suggestion);
+   
+    this.suggestions = [];
+  }
+  onChange():void{
+    const location = this.loginForm.value.location;
+    if(location.length>1)
+    this.geoService.searchCities(location).subscribe(
+      (data: any) => {
+        data.results.forEach((element: any) => {
+          console.log(element.formatted);
+          this.suggestions = data.results.map((element: any) => element.formatted);
+        });
+      },
+      
+      (error) => {
+        console.error('Greška prilikom HTTP poziva:', error);
+        this.suggestions = [];
+      }
+      
+    );
+    else
+        this.suggestions=[];
+     
+      
 
+  }
   changeForm(): void {
     this.isGx = true;
     
@@ -35,9 +63,59 @@ export class LoginComponent {
     this.isTxl = !this.isTxl;
     this.isZ200 = !this.isZ200;
   }
- onSubmit(){
+ async onSubmit(arg:string){
+  
   const password = this.loginForm.value.password;
   const username = this.loginForm.value.username;
-  this.loginService.login(username,password).subscribe()
- }
+  if(arg == 'login')
+  {
+    this.loginService.login(username,password).subscribe()
+  }
+  else
+  {
+    const locationName:string = this.loginForm.value.location;
+    const firstName = this.loginForm.value.firstName;
+    const lastName = this.loginForm.value.lastName;
+    const phoneNumber = this.loginForm.value.phoneNumber;
+    let location={name:locationName,lattitude:0,longitude:0};
+    await this.getCoordinates(locationName).toPromise().then((res) => {
+      location.lattitude = res?.lattitude ?? 0;
+      location.longitude = res?.longitude ?? 0; 
+    });
+    this.loginService.signUp(firstName,lastName,username,phoneNumber,location,password);
+  }
+ 
+  
+}
+ getCoordinates(location:string):Observable<{ name: string, longitude: number, lattitude: number }>
+ {
+  return new Observable(observer => {
+  this.geoService.getCoordinates(location).subscribe(
+    (data: any) => {
+      console.log('Odgovor od API-ja:', data);
+
+      if (data.results && data.results.length > 0) {
+        const location = data.results[0].geometry;
+        const center = {
+          lat: location.lat,
+          lng: location.lng,
+        };
+        console.log('Koordinate grada:', center);
+        const result ={name:location,longitude:center.lng,lattitude:center.lat};
+        observer.next(result);
+      } else {
+        console.error('Nije moguće dobiti koordinate za uneseni grad.');
+      }
+    },
+    (error) => {
+      console.error('Greška prilikom HTTP poziva:', error);
+      
+    },
+    () => {
+      
+      observer.complete();
+    }
+  );
+});
+}
 }

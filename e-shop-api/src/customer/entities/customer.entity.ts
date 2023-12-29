@@ -16,9 +16,6 @@ export class Customer {
   @Column({ type: 'varchar', name: 'last_name', length: 50 })
   lastName: string;
 
-  @Column({ type: 'varchar', name: 'email', length: 50 })
-  email: string;
-
   @Column({ type: 'varchar', name: 'password', length: 100 })
   password: string;
 
