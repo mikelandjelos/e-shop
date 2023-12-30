@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto } from '../dto/create-product.dto';
@@ -38,5 +39,15 @@ export class ProductController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productService.remove(+id);
+  }
+  @Put('/incrementViews/:id')
+  incrementViews(@Param('id')id:string)
+  {
+    return this.productService.incrementPostViews(id);
+  }
+  @Get('/getPostsView/:id')
+  getPostsView(@Param('id')id:string)
+  {
+    return this.productService.getPostsView(id);
   }
 }
