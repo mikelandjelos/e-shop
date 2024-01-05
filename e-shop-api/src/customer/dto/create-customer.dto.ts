@@ -3,7 +3,6 @@ export class CreateCustomerDto {
   username: string;
   firstName: string;
   lastName: string;
-  email: string;
   password: string;
   phoneNumber: string;
 }

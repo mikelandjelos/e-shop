@@ -13,4 +13,12 @@ export class LoginService {
     const body = {username:username,password:password};
     return this.httpClient.post<{access_token:string}>(environment.api+"auth/login",body);
   }
+  signUp(firstName:string,lastName:string,username:string,phoneNumber:string,location:{name:string,longitude:number|undefined,lattitude:number|undefined}|undefined,password:string)
+  {
+    const body = {firstName:firstName,lastName:lastName,username:username,phoneNumber:phoneNumber,password:password};
+    const bodyLocation = {username:username,location}
+   console.log(bodyLocation)
+     this.httpClient.post(environment.api+"customer/addLocation",bodyLocation).subscribe((respo)=>console.log(respo));
+     this.httpClient.post(environment.api+"customer/",body).subscribe((respo)=>console.log(respo));
+  }
 }
