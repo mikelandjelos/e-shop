@@ -21,7 +21,7 @@ export class GeoController {
       member1: string;
       member2: string;
     },
-  ): Promise<string> {
+  ): Promise<number> {
     const { geoSetName, member1, member2 } = requestBody;
     return await this.geoService.getDistanceBetweenLocations(
       geoSetName,

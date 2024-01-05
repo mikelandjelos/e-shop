@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Redis } from 'ioredis';
+import { createClient } from 'redis';
 
 @Injectable()
 export class GeoService {
@@ -7,18 +7,18 @@ export class GeoService {
   async addLocationToGeoSet(
     name: string,
     longitude: number,
-    lattitude: number,
+    latitude: number,
     member: string,
   ): Promise<number> {
-    const redis = new Redis({ host: 'localhost', port: 6390 });
-    return redis.geoadd(name, longitude, lattitude, member);
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
+    return await redisClient.geoAdd(name, [{ longitude, latitude, member }]);
   }
   async getDistanceBetweenLocations(
     geoSetName: string,
     member1: string,
     member2: string,
-  ): Promise<string> {
-    const redis = new Redis({ host: 'localhost', port: 6390 });
-    return await redis.geodist(geoSetName, member1, member2);
+  ): Promise<number> {
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
+    return await redisClient.geoDist(geoSetName, member1, member2);
   }
 }
