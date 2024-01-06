@@ -5,14 +5,35 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entities/product.entity';
 import { Repository } from 'typeorm';
 import Redis from 'ioredis';
+import {  createClient } from 'redis';
 
 @Injectable()
 export class ProductService {
   constructor(@InjectRepository(Product)public readonly productRepository:Repository<Product>){}
-  create(createProductDto: CreateProductDto) {
-    return this.productRepository.save(createProductDto);
+  async create(createProductDto: CreateProductDto) {
+    const saved =await this.productRepository.save(createProductDto);
+    
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6389' });
+    await redisClient.connect();
+    await redisClient.ts.create(saved.id);
+    await redisClient.disconnect();
+    return saved;
   }
+  
+  
+  async viewProduct(id:string)
+  {
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
+    redisClient.ts.add(id,'*',1);
+  }
+  async getNumberOfViews(id:string)
+  {
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
+    const currentTimestamp = Date.now();
 
+    const oneHourAgoTimestamp = currentTimestamp - 60 * 60 * 1000;
+    redisClient.ts.range(id,oneHourAgoTimestamp,'+');
+  }
   findAll() {
     return `This action returns all product`;
   }
@@ -28,21 +49,5 @@ export class ProductService {
   remove(id: number) {
     return `This action removes a #${id} product`;
   }
-  async incrementPostViews(postId:string){
-    const redis = new Redis({ host: 'localhost', port: 6389 });
-    const timeStamp = Date.now();
-    const key = postId; 
-    await redis.zincrby(key,timeStamp,'1')
-  }
-  async getPostsView(postId:string){
-    const redis = new Redis({ host: 'localhost', port: 6389 });
-    const key = postId;
-    const currentTimeStamp = Date.now();
-    const oneHourAgo = currentTimeStamp-60*60*1000;
-    const result = await redis.zrangebyscore(key,oneHourAgo,currentTimeStamp);
-    console.log(result);
-    const totalViews = result.reduce((sum,value)=>sum+=parseInt(value));
-    console.log(totalViews);
-    return totalViews;
-  }
+
 }

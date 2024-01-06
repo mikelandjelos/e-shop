@@ -43,11 +43,11 @@ export class ProductController {
   @Put('/incrementViews/:id')
   incrementViews(@Param('id')id:string)
   {
-    return this.productService.incrementPostViews(id);
+    return this.productService.viewProduct(id);
   }
   @Get('/getPostsView/:id')
   getPostsView(@Param('id')id:string)
   {
-    return this.productService.getPostsView(id);
+    return this.productService.getNumberOfViews(id);
   }
 }

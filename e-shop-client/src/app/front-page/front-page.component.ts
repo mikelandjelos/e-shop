@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
   standalone: true,
   imports: [IonicModule],
   templateUrl: './front-page.component.html',
-  styleUrl: './front-page.component.scss'
+  styleUrl: './front-page.component.css'
 })
 export class FrontPageComponent {
 
