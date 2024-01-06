@@ -9,11 +9,12 @@ import {
   Put,
   UseInterceptors,
   UploadedFile,
+  Res,
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import path = require('path');
@@ -65,5 +66,9 @@ export class ProductController {
   @Get('/getPostsView/:id')
   getPostsView(@Param('id') id: string) {
     return this.productService.getNumberOfViews(id);
+  }
+  @Get('product-image/:imagename')
+  findProfileImage(@Param('imagename')imagename,@Res()res):Observable<Object>{
+   return of(res.sendFile(path.join(process.cwd(),'uploads/profileimages/'+imagename)));
   }
 }
