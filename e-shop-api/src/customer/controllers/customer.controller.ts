@@ -20,9 +20,21 @@ export class CustomerController {
     return this.customerService.create(createCustomerDto);
   }
   @Post('addLocation')
-  addLocation(@Body()body:{username:string,location:{name:string,longitude:number,lattitude:number}}){
-   console.log(body);
-    return this.customerService.addLocationToGeoSet(body.username,"City",body.location.longitude,body.location.lattitude,body.location.name);
+  addLocation(
+    @Body()
+    body: {
+      username: string;
+      location: { name: string; longitude: number; lattitude: number };
+    },
+  ) {
+    console.log(body);
+    return this.customerService.addLocationToGeoSet(
+      body.username,
+      'City',
+      body.location.longitude,
+      body.location.lattitude,
+      body.location.name,
+    );
   }
   @Get()
   findAll() {
@@ -52,8 +64,10 @@ export class CustomerController {
     return this.customerService.getCoordinatesForCity(username);
   }
   @Get(':username/:range')
-  getCitiesInRange(@Param('username')username:string,@Param('range')range:number)
-  {
-    return this.customerService.getCitiesInRange(username,range);
+  getCitiesInRange(
+    @Param('username') username: string,
+    @Param('range') range: number,
+  ) {
+    return this.customerService.getCitiesInRange(username, range);
   }
 }

@@ -43,29 +43,34 @@ export class CustomerService {
     return `This action removes a #${id} customer`;
   }
   async addLocationToGeoSet(
-    username:string,
+    username: string,
     name: string,
     longitude: number,
     lattitude: number,
     member: string,
   ): Promise<number> {
     const redis = new Redis({ host: 'localhost', port: 6389 });
-    redis.set(username,member);
+    redis.set(username, member);
     return redis.geoadd(name, longitude, lattitude, member);
   }
-  async getCoordinatesForCity(username)
-  {
+  async getCoordinatesForCity(username) {
     const redis = new Redis({ host: 'localhost', port: 6389 });
     const city = await redis.get(username);
-    const coordinates = await redis.geopos("City",city);
+    const coordinates = await redis.geopos('City', city);
     return coordinates[0];
   }
-  async getCitiesInRange(username:string,range:number)
-  {
-    console.log(username,range);
+  async getCitiesInRange(username: string, range: number) {
+    console.log(username, range);
     const redis = new Redis({ host: 'localhost', port: 6389 });
-    const coords=await this.getCoordinatesForCity(username);
-    const citiesInRange = await redis.georadius("City", coords[0], coords[1], range, 'km', 'WITHDIST');
+    const coords = await this.getCoordinatesForCity(username);
+    const citiesInRange = await redis.georadius(
+      'City',
+      coords[0],
+      coords[1],
+      range,
+      'km',
+      'WITHDIST',
+    );
     return citiesInRange;
   }
 }

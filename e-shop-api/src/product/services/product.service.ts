@@ -5,34 +5,35 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entities/product.entity';
 import { Repository } from 'typeorm';
 import Redis from 'ioredis';
-import {  createClient } from 'redis';
+import { createClient } from 'redis';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class ProductService {
-  constructor(@InjectRepository(Product)public readonly productRepository:Repository<Product>){}
+  constructor(
+    @InjectRepository(Product)
+    public readonly productRepository: Repository<Product>,
+  ) {}
   async create(createProductDto: CreateProductDto) {
-    const saved =await this.productRepository.save(createProductDto);
-    
+    const saved = await this.productRepository.save(createProductDto);
+
     const redisClient = await createClient({ url: 'redis://127.0.0.1:6389' });
     await redisClient.connect();
     await redisClient.ts.create(saved.id);
     await redisClient.disconnect();
     return saved;
   }
-  
-  
-  async viewProduct(id:string)
-  {
+
+  async viewProduct(id: string) {
     const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
-    redisClient.ts.add(id,'*',1);
+    redisClient.ts.add(id, '*', 1);
   }
-  async getNumberOfViews(id:string)
-  {
+  async getNumberOfViews(id: string) {
     const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
     const currentTimestamp = Date.now();
 
     const oneHourAgoTimestamp = currentTimestamp - 60 * 60 * 1000;
-    redisClient.ts.range(id,oneHourAgoTimestamp,'+');
+    redisClient.ts.range(id, oneHourAgoTimestamp, '+');
   }
   findAll() {
     return `This action returns all product`;
@@ -49,5 +50,4 @@ export class ProductService {
   remove(id: number) {
     return `This action removes a #${id} product`;
   }
-
 }

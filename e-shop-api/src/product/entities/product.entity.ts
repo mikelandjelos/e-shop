@@ -26,7 +26,8 @@ export class Product {
 
   @Column({ type: 'integer', name: 'stock' })
   stock: number;
-
+  @Column({ type: 'text', name: 'image', nullable: true })
+  image: string;
   @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
   orderItems: OrderItem[];
 
