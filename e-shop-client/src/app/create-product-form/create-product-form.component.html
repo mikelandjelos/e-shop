@@ -20,11 +20,13 @@
         <button class="clear-btn btn">Clear</button>
       </div>
     </div>
-    <label class="drop-area">
+    <label class="drop-area"(dragover)="onDragOver($event)"
+    (drop)="onDrop($event)">>
       <input type="file" 
-              accept="image/webp" 
+              accept="image/*" 
               name="loadImg"
-              class="img-input"/>
+              class="img-input"
+              (change)="onFileSelected($event)"/>
       <div class="drop-viewer"></div>
       <div class="drop-help">
         <p class="drop-help-text">Drag here your image or <span class="underline-hover">select the file</span></p>
@@ -51,7 +53,7 @@
       <label class="grid-input">
         <textarea id="desc1" 
                   class="desc1 descInput" 
-                  placeholder="Description"></textarea>
+                  placeholder="Description"formControlName="description"></textarea>
         <div class="count" data-type="desc"></div>
       </label>
       <label class="grid-input">

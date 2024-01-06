@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 
@@ -8,16 +8,18 @@ import { environment } from '../../environments/environment';
 export class ProductService {
 
   constructor(private httpClient:HttpClient) { }
-  createProduct(title:string,price:number,description:string,stock:number,category:string,wareHouse:string)
-  {
-    const body = {
-      name:title,
-      price:price,
-      description:description,
-      stock:stock,
-      category:category,
-      wareHouse:wareHouse
-    }
-    this.httpClient.post(environment.api+"product",body).subscribe((mess)=>console.log(mess));
+  createProduct(title: string, price: number, description: string, stock: number, category: string, wareHouse: string, image: File) {
+    const formData: FormData = new FormData();
+    
+    formData.append('name', title);
+    formData.append('price', price.toString());
+    formData.append('description', description);
+    formData.append('stock', stock.toString());
+    formData.append('category', category);
+    formData.append('wareHouse', wareHouse);
+    formData.append('file', image);
+    const headers = new HttpHeaders();
+    headers.set('Content-Type', 'multipart/form-data');
+    this.httpClient.post(environment.api + 'product', formData)
   }
 }

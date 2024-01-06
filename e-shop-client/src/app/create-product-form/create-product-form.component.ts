@@ -15,7 +15,7 @@ import { ProductService } from '../services/product.service';
 export class CreateProductFormComponent {
   createForm:FormGroup;
 constructor(private dialogRef: MatDialogRef<CreateProductFormComponent>,private formBuilder:FormBuilder,private productService:ProductService){
-  this.createForm=this.formBuilder.group({title:'',price:'',description:'',stock:'',category:'',wareHouse:''});
+  this.createForm=this.formBuilder.group({title:'',price:'',description:'',stock:'',category:'',wareHouse:'',image:null});
 }
 close(){
   this.dialogRef.close()
@@ -28,6 +28,29 @@ onSubmit()
   const stock = Number(this.createForm.value.stock);
   const category = this.createForm.value.category;
   const wareHouse = this.createForm.value.wareHouse;
-  this.productService.createProduct(title,price,description,stock,category,wareHouse);
+  const image:File =  (this.createForm.value.image); 
+  
+  this.productService.createProduct(title,price,description,stock,category,wareHouse,image);
+}
+onDragOver(event: DragEvent): void {
+  event.preventDefault();
+}
+onDrop(event: DragEvent): void {
+  event.preventDefault();
+  
+  const file = event.dataTransfer?.files[0];
+  if(file){
+    this.createForm.patchValue({image:file})
+  }
+}
+
+onFileSelected(event: any): void {
+  const file: File = event.target.files[0];
+  
+  if (file) {
+    this.createForm.patchValue({
+      image: file
+    });
+  }
 }
 }

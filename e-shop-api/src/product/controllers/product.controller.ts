@@ -35,7 +35,7 @@ export class ProductController {
   @Post()
   @UseInterceptors(FileInterceptor('file', storage))
   create(@UploadedFile() file, @Body() createProductDto: CreateProductDto) {
-    createProductDto.image = file.filename;
+   createProductDto.image = file.filename;
     return this.productService.create(createProductDto);
   }
 

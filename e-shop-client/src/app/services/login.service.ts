@@ -18,7 +18,7 @@ export class LoginService {
     const body = {firstName:firstName,lastName:lastName,username:username,phoneNumber:phoneNumber,password:password};
     const bodyLocation = {username:username,location}
    console.log(bodyLocation)
-     this.httpClient.post(environment.api+"customer/addLocation",bodyLocation).subscribe((respo)=>console.log(respo));
-     this.httpClient.post(environment.api+"customer/",body).subscribe((respo)=>console.log(respo));
+     this.httpClient.post(environment.api+"customer/addLocation",bodyLocation)
+     this.httpClient.post(environment.api+"customer/",body)
   }
 }
