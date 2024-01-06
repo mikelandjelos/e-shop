@@ -8,10 +8,16 @@ import { FrontPageComponent } from './front-page/front-page.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet,GeoComponent,LoginComponent,FrontPageComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    GeoComponent,
+    LoginComponent,
+    FrontPageComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-title = 'e-shop-client'
+  title = 'e-shop-client';
 }
