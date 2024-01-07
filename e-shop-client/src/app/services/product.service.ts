@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +22,9 @@ export class ProductService {
     const headers = new HttpHeaders();
     headers.set('Content-Type', 'multipart/form-data');
     this.httpClient.post(environment.api + 'product', formData)
+  }
+  getProductImage(imageName: string): Observable<Blob> {
+    const requestOptions: Object = { responseType: 'blob' };
+    return (this.httpClient.get<Blob>(`${environment.api}product/product-image/${imageName}`,requestOptions));
   }
 }
