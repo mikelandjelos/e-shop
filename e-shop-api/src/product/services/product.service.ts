@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -49,5 +49,67 @@ export class ProductService {
 
   remove(id: number) {
     return `This action removes a #${id} product`;
+  }
+ async decreaseProduct(id:string, count:number)
+  {
+    const rC = new Redis({port:6390,host:'localhost'});
+    const rcN = new Redis({port:6389,host:'localhost'});
+   const product = await this.productRepository.findOne({where:{id}})
+   if(product)
+   {
+    product.stock-=count;
+    
+    if(product.stock<=0)
+   { await rC.zrem("stock",product.id);
+    return await this.productRepository.delete(id);}
+
+    await this.productRepository.update({ id }, { stock: product.stock });
+    const productScore = await rC.zscore("stock",product.id);
+    if(productScore)
+    {
+      await rC.zincrby("stock",count,product.id)
+    }
+    else
+    {
+      
+      await rC.zadd("stock",count,product.id)
+    }
+    rcN.hmset(product.id,product);
+  
+    return product 
+   }
+   else
+   {
+    throw new BadRequestException('Do not exist');
+   }
+  }
+  async getFourWithMostScore()
+  {
+    const rC = new Redis({port:6390,host:'localhost'});
+    const rCN = new Redis({port:6389,host:'localhost'});
+   let elements= await rC.zrevrange("stock",0,3);
+   
+   const promises = elements.map(async (el) => {
+    const elRet = await rCN.hgetall(el);
+    if(Object.keys(elRet).length !== 0)
+    {
+      elements = elements.filter((e)=>e!==el)
+    }
+    
+    return elRet;
+  }); let retelements = await Promise.all(promises);
+  if(elements.length>0)
+  {
+  const promisesDb= elements.map(async (el)=>{
+      const id = JSON.stringify(el);
+      const objFromDb = await this.productRepository.findOne({where:{id}})
+      return objFromDb;
+    });
+    const resultsFromDb = await Promise.all(promisesDb);
+    return [retelements,resultsFromDb];
+  }
+
+  
+   return retelements;
   }
 }

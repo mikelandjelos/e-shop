@@ -45,7 +45,7 @@ export class ProductController {
     return this.productService.findAll();
   }
 
-  @Get(':id')
+  @Get('/getPost/:id')
   findOne(@Param('id') id: string) {
     return this.productService.findOne(+id);
   }
@@ -70,5 +70,15 @@ export class ProductController {
   @Get('product-image/:imagename')
   findProfileImage(@Param('imagename')imagename,@Res()res):Observable<Object>{
    return of(res.sendFile(path.join(process.cwd(),'uploads/profileimages/'+imagename)));
+  }
+  @Put('/decreaseStock/:id/:count')
+  decreaseStock(@Param('id')id:string, @Param('count')count:number)
+  {
+    this.productService.decreaseProduct(id,count);
+  }
+  @Get('TopSales')
+  getTopSales()
+  {
+    return this.productService.getFourWithMostScore();
   }
 }

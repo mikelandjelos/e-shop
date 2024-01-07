@@ -21,7 +21,7 @@ export class ProductService {
     formData.append('file', image);
     const headers = new HttpHeaders();
     headers.set('Content-Type', 'multipart/form-data');
-    this.httpClient.post(environment.api + 'product', formData)
+     this.httpClient.post(environment.api + 'product', formData).subscribe((resp)=>console.log(resp))
   }
   getProductImage(imageName: string): Observable<Blob> {
     const requestOptions: Object = { responseType: 'blob' };
