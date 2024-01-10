@@ -10,6 +10,8 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
+  BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto } from '../dto/create-product.dto';
@@ -19,6 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import path = require('path');
 import { v4 as uuidv4 } from 'uuid';
+import { Product } from '../entities/product.entity';
 export const storage = {
   storage: diskStorage({
     destination: './uploads/profileimages',
@@ -36,18 +39,13 @@ export class ProductController {
   @Post()
   @UseInterceptors(FileInterceptor('file', storage))
   create(@UploadedFile() file, @Body() createProductDto: CreateProductDto) {
-   createProductDto.image = file.filename;
+    createProductDto.image = file.filename;
     return this.productService.create(createProductDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.productService.findAll();
   }
 
   @Get('/getPost/:id')
   findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+    return this.productService.findOne(id);
   }
 
   @Patch(':id')
@@ -68,17 +66,47 @@ export class ProductController {
     return this.productService.getNumberOfViews(id);
   }
   @Get('product-image/:imagename')
-  findProfileImage(@Param('imagename')imagename,@Res()res):Observable<Object>{
-   return of(res.sendFile(path.join(process.cwd(),'uploads/profileimages/'+imagename)));
+  findProfileImage(@Param('imagename') imagename, @Res() res) {
+    return this.productService.getImageBlob(imagename, res);
   }
   @Put('/decreaseStock/:id/:count')
-  decreaseStock(@Param('id')id:string, @Param('count')count:number)
-  {
-    this.productService.decreaseProduct(id,count);
+  decreaseStock(@Param('id') id: string, @Param('count') count: number) {
+    return this.productService.decreaseProduct(id, count);
   }
   @Get('TopSales')
-  getTopSales()
-  {
-    return this.productService.getFourWithMostScore();
+  getTopSales() {
+    return this.productService.getFourWithMostScore('stock');
+  }
+  @Get('LastFour')
+  getLastFour() {
+    return this.productService.getFourWithMostScore('created');
+  }
+  @Post('bulkCreate')
+  async bulkCreate(
+    @Body() createProductDtos: CreateProductDto[],
+  ): Promise<Product[]> {
+    try {
+      const result = await this.productService.bulkCreate(createProductDtos);
+      return result;
+    } catch (error) {
+      // Handle errors appropriately, e.g., log and return a proper response
+      console.error(error);
+      throw new BadRequestException('Error performing bulk creation');
+    }
+  }
+
+  @Get('paginated')
+  async findPaginated(
+    @Query('page') page: number = 1,
+    @Query('pageSize') pageSize: number = 10,
+  ): Promise<{ products: Product[]; total: number }> {
+    try {
+      const result = await this.productService.findPaginated(page, pageSize);
+      return result;
+    } catch (error) {
+      // Handle errors appropriately, e.g., log and return a proper response
+      console.error(error);
+      throw new BadRequestException('Error fetching paginated products');
+    }
   }
 }

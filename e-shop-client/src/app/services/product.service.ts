@@ -27,4 +27,10 @@ export class ProductService {
     const requestOptions: Object = { responseType: 'blob' };
     return (this.httpClient.get<Blob>(`${environment.api}product/product-image/${imageName}`,requestOptions));
   }
+  getTopSales():Observable<any>{
+    return this.httpClient.get(environment.api+'product/TopSales');
+  }
+  getNewArrivals():Observable<any>{
+    return this.httpClient.get(environment.api+'product/LastFour');
+  }
 }

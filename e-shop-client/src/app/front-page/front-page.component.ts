@@ -14,32 +14,81 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrl: './front-page.component.css'
 })
 export class FrontPageComponent {
-  image:any;
-  changedImage = false;
-  //https://i.postimg.cc/t403yfn9/home2.jpg
+
+  
+  changeSales = false;
  
-  constructor(public dialog:MatDialog,productService:ProductService,private domSanitizer:DomSanitizer){
+  changeArrivals = false;
+  topSales:any =[];
+  topSalesImages:any=[];
+  newArrivals : any = [];
+  newArrivalsImages:any=[];
+  constructor(public dialog:MatDialog,private productService:ProductService,private domSanitizer:DomSanitizer){
   
     
-    const img = 'PetraDjordjevic6f59ba37-5401-4564-8aaf-c94dc5c6d723.jpg';
-    productService.getProductImage(img).subscribe((respo)=>{
-       this.createImageFromBlob(respo);
+    productService.getTopSales().subscribe((respo)=>{
+      const mergedArrivals = [].concat(...respo);
+      this.topSales=mergedArrivals;
+      
+      
+      this.processImages();
+     this.changeSales=true;
     })
-    console.log(this.image);
+    
+    productService.getNewArrivals().subscribe((respo)=>{
+      const mergedArrivals = [].concat(...respo);this.newArrivals = mergedArrivals; 
+     
+      this.processImagesArrivals();
+      this.changeArrivals=true;
+    })
+   
+   
   }
-  createImageFromBlob(image: Blob): any {
-   console.log(image);
+  createImageFromBlob(image: Blob,fleg:number): any {
+  
     const objectURL = URL.createObjectURL(image);
-    this.image=this.domSanitizer.bypassSecurityTrustUrl(objectURL) as string;
+    if(fleg == 0)
+   this.topSalesImages.push( this.domSanitizer.bypassSecurityTrustUrl(objectURL) as string);
+   else if(fleg == 1 )
+   this.newArrivalsImages.push( this.domSanitizer.bypassSecurityTrustUrl(objectURL) as string);
     
-    this.onImageChange();
   }
-  onImageChange() {
-    
-    this.changedImage = true;
+  onChange(fleg:string) {
+   
+   
+    if(fleg =='sale')
+    this.changeSales=true
   }
   openDialog(){
     console.log('a');
     const dialogRef = this.dialog.open(CreateProductFormComponent,{width:'800px',height:'630px'})
+  }
+  processImages()
+  {
+    this.topSales.forEach((product: any,index:any) => {
+      this.productService.getProductImage(product.image).subscribe((respo)=>{
+        
+        this.createImageFromBlob(respo,0)
+       
+        product.blob = this.topSalesImages[index]
+        
+      })
+    });
+  }
+
+  processImagesArrivals()
+  {
+    
+    this.newArrivals.forEach((product: any,index:any) => {
+     
+      this.productService.getProductImage(product.image).subscribe((respo)=>{
+        
+        this.createImageFromBlob(respo,1)
+        product.blob = this.newArrivalsImages[index];
+        
+        
+        
+      })
+    });
   }
 }
