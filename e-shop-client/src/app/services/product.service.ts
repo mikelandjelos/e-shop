@@ -33,4 +33,10 @@ export class ProductService {
   getNewArrivals():Observable<any>{
     return this.httpClient.get(environment.api+'product/LastFour');
   }
+  getLastMeasuredValue(id:string){
+    return this.httpClient.get(`${environment.api}product/lastView/${id}`);
+  }
+  incrementViews(id:string){
+    return this.httpClient.put(`${environment.api}product/incrementViews/${id}`,{});
+  }
 }

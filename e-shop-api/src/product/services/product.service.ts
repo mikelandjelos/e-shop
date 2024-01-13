@@ -37,17 +37,36 @@ export class ProductService {
     return saved;
   }
   async viewProduct(id: string) {
-    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
-    redisClient.ts.add(id, '*', 1);
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });await redisClient.connect();
+   await redisClient.ts.add(id, '*', 1);await redisClient.disconnect();
   }
   async getNumberOfViews(id: string) {
     const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
     const currentTimestamp = Date.now();
-
+    redisClient.connect();
     const oneHourAgoTimestamp = currentTimestamp - 60 * 60 * 1000;
-    redisClient.ts.range(id, oneHourAgoTimestamp, '+');
+    const num =await redisClient.ts.range(id, oneHourAgoTimestamp, '+'); redisClient.disconnect(); const sum = num.length;return sum;
   }
-
+  async getLastMeasuredValue(id:string):Promise<any>{
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
+    await redisClient.connect();
+    const rangeResult = await redisClient.ts.range(id, '-', '+');
+    if (rangeResult && rangeResult.length > 0) {
+      const lastMeasuredValue = rangeResult[rangeResult.length-1]; 
+    
+      if (lastMeasuredValue ) {
+        
+        
+          const timestamp = lastMeasuredValue.timestamp;
+          const date = new Date(timestamp);
+          const formattedDate = date.toLocaleString(); 
+         
+          return [rangeResult.length,formattedDate];
+      }
+      
+  }
+  await redisClient.disconnect();
+  }
   update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;
   }

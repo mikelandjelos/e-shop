@@ -1,0 +1,85 @@
+
+  
+     
+        
+          <div class="pop-up-wrapper">
+            <div class="go-back" ><i class="fa fa-arrow-left"></i>
+            </div>
+            <div class="product-details">
+              <div class="product-left">
+                <div class="product-info">
+                  <div class="product-manufacturer">{{data.product.category}}
+                  </div>
+                  <div class="product-title">
+                    {{data.product.name}}
+                  </div>
+                  <div class="product-price" price-data="320.03">
+                    ${{data.product.price}}<span class="product-price-cents"></span>
+                  </div>
+                </div>
+                <div class="product-image">
+                  <img [src]="data.product.blob" />
+                </div>
+              </div>
+              <div class="product-right">
+                
+               
+                <div class="product-rating">
+                  <i class="fa fa-star rating" star-data="1"></i>
+                  <i class="fa fa-star rating" star-data="2"></i>
+                  <i class="fa fa-star rating" star-data="3"></i>
+                  <i class="fa fa-star" star-data="4"></i>
+                  <i class="fa fa-star" star-data="5"></i>
+                  
+  
+                </div>
+                <!-- <div class="product-quantity">
+                  <label for="product-quantity-input" class="product-quantity-label">Quantity</label>
+                  <div class="product-quantity-subtract">
+                    <i class="fa fa-chevron-left"></i>
+                  </div>
+                  <div class="product-description">
+                    Description: {{data.product.description}}
+                    </div>
+                  <div>
+                    <input type="text" id="product-quantity-input" placeholder="0" value="0" />
+                  </div>
+                  <div class="product-quantity-add">
+                    <i class="fa fa-chevron-right"></i>
+                  </div>
+                </div>
+              </div> -->
+              <div class="product-description">
+                Description: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </div>
+              <div class="product-available">
+                Last reviewed: <span class="product-extended"> {{lastView}}</span>
+                
+               </div>
+               <div class="product-available">
+               
+                Number of views: <span class="product-extended"> {{numberOfViews}}</span>
+               </div>
+              <div class="product-bottom">
+                <div class="product-checkout">
+                   Price
+                  <div class="product-checkout-total">
+                    <i class="fa fa-usd"></i>
+                    <div class="product-checkout-total-amount">
+                   $   {{data.product.price}}
+                    </div>
+                  </div>
+                </div>
+                <div class="product-checkout-actions">
+                  <a class="add-to-cart"  onclick="AddToCart(event);">Add to Cart</a>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+       
+    
+   
+   
+          
+    

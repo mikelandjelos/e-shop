@@ -94,7 +94,11 @@ export class ProductController {
       throw new BadRequestException('Error performing bulk creation');
     }
   }
-
+  @Get('LastView/:id')
+  lastView(@Param('id')id:string)
+  {
+    return this.productService.getLastMeasuredValue(id);
+  }
   @Get('paginated')
   async findPaginated(
     @Query('page') page: number = 1,

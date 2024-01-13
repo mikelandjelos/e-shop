@@ -5,6 +5,7 @@ import { CreateProductFormComponent } from '../create-product-form/create-produc
 import { ProductService } from '../services/product.service';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ProductDetailComponent } from '../product-detail/product-detail.component';
 
 @Component({
   selector: 'app-front-page',
@@ -53,6 +54,13 @@ export class FrontPageComponent {
    this.newArrivalsImages.push( this.domSanitizer.bypassSecurityTrustUrl(objectURL) as string);
     
   }
+  openPopup(product: any): void {
+    this.dialog.open(ProductDetailComponent, {
+      width: '800px',
+      height: '630px',
+      data: { product: product }
+    });
+  }
   onChange(fleg:string) {
    
    
@@ -60,8 +68,11 @@ export class FrontPageComponent {
     this.changeSales=true
   }
   openDialog(){
-    console.log('a');
+    
     const dialogRef = this.dialog.open(CreateProductFormComponent,{width:'800px',height:'630px'})
+  }
+  open(){
+    this.dialog.open(ProductDetailComponent,{width:'800px',height:'630px'})
   }
   processImages()
   {

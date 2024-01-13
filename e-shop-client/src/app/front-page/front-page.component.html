@@ -117,7 +117,7 @@
       <div class="seller container">
           <h2>New Arrivals</h2>
           <div class="best-seller" *ngIf="changeArrivals">
-              <div class="best-p1"*ngFor="let product of newArrivals">
+              <div class="best-p1"*ngFor="let product of newArrivals"(click)="openPopup(product)">
                   <img [src]="product.blob" alt="img">
                   <div class="best-p1-txt">
                       <div class="name-of-p">
@@ -149,7 +149,7 @@
       <div class="seller container">
           <h2>Hot Sales</h2>
           <div class="best-seller">
-              <div class="best-p1">
+              <div class="best-p1"(click)="open()">
                   <img src="https://i.postimg.cc/jS7pSQLf/na4.png" alt="img">
                   <div class="best-p1-txt">
                       <div class="name-of-p">
