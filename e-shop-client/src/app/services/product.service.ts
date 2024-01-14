@@ -39,4 +39,10 @@ export class ProductService {
   incrementViews(id:string){
     return this.httpClient.put(`${environment.api}product/incrementViews/${id}`,{});
   }
+  setToCart(product:any){
+    return this.httpClient.post(`${environment.api}product/setInCache`,{product});
+  }
+  getAllFromCart():Observable<any>{
+    return this.httpClient.get(`${environment.api}product/GetProductsFromCart`);
+  }
 }

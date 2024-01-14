@@ -96,10 +96,11 @@ export class FrontPageComponent {
         
         this.createImageFromBlob(respo,1)
         product.blob = this.newArrivalsImages[index];
-        
+        console.log(product.blob)
         
         
       })
     });
   }
+  
 }

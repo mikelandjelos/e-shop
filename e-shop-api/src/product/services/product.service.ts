@@ -71,9 +71,7 @@ export class ProductService {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
-  }
+  
   async decreaseProduct(id: string, count: number): Promise<Object> {
     const rC = new Redis({ port: 6390, host: 'localhost' });
     const rcN = new Redis({ port: 6389, host: 'localhost' });
@@ -287,5 +285,43 @@ export class ProductService {
     }
 
     return product;
+  }
+  async addToCart(product:any){
+    const cacheKey = `cart:${product.product.id}`;
+    console.log(product.product)
+    product.product.blob = product.product.blob.changingThisBreaksApplicationSecurity;
+    console.log(product.product)
+    const rCN = new Redis({ port: 6389, host: 'localhost' });
+    await rCN.hset(cacheKey,product.product);
+    return product ;
+  }
+   async getAllProductsFromCache() {
+    // Example: Delete all keys starting with 'products:'
+    const rCN = new Redis({ port: 6389, host: 'localhost' });
+
+    const keys = await rCN.keys(`cart:*`);
+
+    const products = [];
+
+    for (const key of keys) {
+      const product = await rCN.hgetall(key);
+      products.push(product);
+    }
+  
+    return products;
+  }
+  async deleteAllProductsFromRedisCache() {
+    // Example: Delete all keys starting with 'products:'
+    const rCN = new Redis({ port: 6389, host: 'localhost' });
+
+    const keys = await rCN.keys(`cart:*`);
+
+    const deletionPromises = keys.map(async (key) => {
+      await rCN.del(key);
+    });
+  
+    await Promise.all(deletionPromises);
+  
+    console.log(`Deleted ${keys.length} products from Redis cache.`);
   }
 }

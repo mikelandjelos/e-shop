@@ -5,12 +5,13 @@ import { GeoComponent } from './geo/geo.component';
 import { CreateProductFormComponent } from './create-product-form/create-product-form.component';
 import { FiltersComponent } from './filters/filters.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 
 export const routes: Routes = [
   { path: 'login', pathMatch: 'full', component: LoginComponent },
   { path: 'geo', pathMatch: 'full', component: GeoComponent },
   { path: 'front-page', pathMatch: 'full', component: FrontPageComponent },
   { path: '', redirectTo: '/front-page', pathMatch: 'full' },
-  { path: 'c', pathMatch: 'full', component: FiltersComponent },
+  { path: 'cart', pathMatch: 'full', component: ShoppingCartComponent },
   { path: 'd', pathMatch: 'full', component: ProductDetailComponent },
 ];

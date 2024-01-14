@@ -12,7 +12,7 @@ import { ProductService } from '../services/product.service';
 export class ProductDetailComponent  {
    numberOfViews = null;
    lastView: any;
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,productService:ProductService){
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,private productService:ProductService){
     this.lastView = new Date();
     console.log('Product details:', data.product);
     productService.getLastMeasuredValue(data.product.id).subscribe((respo: any) => {
@@ -31,5 +31,10 @@ this.lastView = formattedDate;
       }
       productService.incrementViews(data.product.id).subscribe((respo)=>console.log(respo));      
     });
+  }
+  addToCart(product:any)
+  {
+    console.log(product);
+    this.productService.setToCart(product).subscribe((respo)=>console.log(respo));
   }
 }

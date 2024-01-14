@@ -20,6 +20,7 @@
                 <div class="product-image">
                   <img [src]="data.product.blob" />
                 </div>
+                <button class ="button"(click)="addToCart(data.product)" >Add to Cart</button>
               </div>
               <div class="product-right">
                 
@@ -71,7 +72,7 @@
                   </div>
                 </div>
                 <div class="product-checkout-actions">
-                  <a class="add-to-cart"  onclick="AddToCart(event);">Add to Cart</a>
+                
                   
                 </div>
               </div>

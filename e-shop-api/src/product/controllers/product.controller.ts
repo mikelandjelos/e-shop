@@ -53,10 +53,7 @@ export class ProductController {
     return this.productService.update(+id, updateProductDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
-  }
+ 
   @Put('/incrementViews/:id')
   incrementViews(@Param('id') id: string) {
     return this.productService.viewProduct(id);
@@ -112,5 +109,20 @@ export class ProductController {
       console.error(error);
       throw new BadRequestException('Error fetching paginated products');
     }
+  }
+  @Post('setInCache')
+  setInCache(@Body() product: any)
+  {
+    return this.productService.addToCart(product);
+  }
+  @Get('GetProductsFromCart')
+  getFromCart()
+  {
+    return this.productService.getAllProductsFromCache();
+  }
+  @Delete('DeleteFromCache')
+  deleteFromCache()
+  {
+    return this.productService.deleteAllProductsFromRedisCache();
   }
 }
