@@ -11,7 +11,7 @@ export const routes: Routes = [
   { path: 'login', pathMatch: 'full', component: LoginComponent },
   { path: 'geo', pathMatch: 'full', component: GeoComponent },
   { path: 'front-page', pathMatch: 'full', component: FrontPageComponent },
-  { path: '', redirectTo: '/front-page', pathMatch: 'full' },
   { path: 'cart', pathMatch: 'full', component: ShoppingCartComponent },
   { path: 'd', pathMatch: 'full', component: ProductDetailComponent },
+  { path: '', redirectTo: '/front-page', pathMatch: 'full' },
 ];
