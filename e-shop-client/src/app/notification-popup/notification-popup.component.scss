@@ -1,0 +1,98 @@
+$color_1: #fff;
+$color_2: #8391A1;
+$font-family_1: sans-serif;
+$border-left-color_1: #8391A1;
+
+@keyframes show {
+  50% {
+    opacity: 1;
+    transform: scale(.8) rotate(360deg);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.5) rotate(360deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: $font-family_1;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.frame {
+  background: #e2e8f0;
+  width: 600px; /* Povećana širina frame-a */
+  height: 600px; /* Povećana visina frame-a */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card {
+    background: #fff;
+    width: 450px; /* Povećana širina kartice */
+    height: 250px; /* Povećana visina kartice */
+    position: absolute;
+    text-align: center;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, .3);
+    opacity: 0;
+    transform: scale(0);
+  }
+  
+  .number-bg {
+    border: 50px solid transparent; /* Povećana veličina brojevne pozadine */
+    border-left-color: $border-left-color_1;
+    position: absolute;
+    right: -50px; /* Povećana udaljenost od ruba frame-a */
+    top: -50px; /* Povećana udaljenost od vrha frame-a */
+    transform: rotate(-45deg);
+  }
+  
+  .number {
+    color: $color_1;
+    position: absolute;
+    right: 20px; /* Pomeranje brojača unutar brojevne pozadine */
+    top: 15px; /* Pomeranje brojača unutar brojevne pozadine */
+  }
+  
+  .text {
+    color: $color_2;
+    font-size: 1.2em; /* Povećana veličina teksta */
+  }
+  
+  .headline {
+    font-weight: 600;
+    font-size: 1.8em; /* Povećana veličina naslova */
+    display: inline-block;
+    padding: 1em 0;
+  }
+  
+  .button {
+    background: #f05e8a;
+    color: $color_1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1em 0; /* Povećana visina dugmeta */
+    cursor: pointer;
+  }
+  
+  .active {
+    animation: show 1s linear forwards;
+  }

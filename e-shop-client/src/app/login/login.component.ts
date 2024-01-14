@@ -4,6 +4,8 @@ import { LoginService } from '../services/login.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GeoService } from '../services/geo.service';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,7 @@ import { Observable } from 'rxjs';
 })
 export class LoginComponent {
   loginForm:FormGroup;
-  constructor(private loginService:LoginService,private formBuilder:FormBuilder,private geoService:GeoService){
+  constructor(private loginService:LoginService,private formBuilder:FormBuilder,private geoService:GeoService,private dialog:MatDialog){
     this.loginForm=this.formBuilder.group({firstName:'',lastName:'',username:'',phoneNumber:'',location:'',password:''});
   }
   suggestions: string[] = [];
@@ -69,7 +71,9 @@ export class LoginComponent {
   const username = this.loginForm.value.username;
   if(arg == 'login')
   {
-    this.loginService.login(username,password).subscribe()
+    this.loginService.login(username,password).subscribe((respo)=>{console.log(respo)
+    this.loginService.getUser(respo.access_token).subscribe((res)=>{console.log(res)})
+    })
   }
   else
   {
@@ -82,7 +86,9 @@ export class LoginComponent {
       location.lattitude = res?.lattitude ?? 0;
       location.longitude = res?.longitude ?? 0; 
     });
-    this.loginService.signUp(firstName,lastName,username,phoneNumber,location,password);
+    this.loginService.signUp(firstName,lastName,username,phoneNumber,location,password).subscribe((respo)=>{console.log(respo)
+      this.dialog.open(NotificationPopupComponent,{ data: { title: "Please login now", text:"Enter your username and password"  }})
+    });
   }
  
   

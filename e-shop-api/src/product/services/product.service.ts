@@ -296,7 +296,7 @@ export class ProductService {
     return product ;
   }
    async getAllProductsFromCache() {
-    // Example: Delete all keys starting with 'products:'
+    
     const rCN = new Redis({ port: 6389, host: 'localhost' });
 
     const keys = await rCN.keys(`cart:*`);
@@ -311,7 +311,7 @@ export class ProductService {
     return products;
   }
   async deleteAllProductsFromRedisCache() {
-    // Example: Delete all keys starting with 'products:'
+   
     const rCN = new Redis({ port: 6389, host: 'localhost' });
 
     const keys = await rCN.keys(`cart:*`);
