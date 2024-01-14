@@ -22,6 +22,10 @@ export class ShoppingCartComponent {
       console.log(this.products);
     });
   }
+  getQuantityOptions(stock: number): number[] {
+    
+    return Array.from({ length: stock }, (_, index) => index + 1);
+  }
   updateQuantity(event: Event,product:any) {
     const selectedValue = (event.target as HTMLSelectElement).value;
     
