@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-front-page',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule,HeaderComponent],
   templateUrl: './front-page.component.html',
   styleUrl: './front-page.component.css',
 })
