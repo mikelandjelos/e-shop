@@ -6,6 +6,7 @@ import { GeoService } from '../services/geo.service';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ import { NotificationPopupComponent } from '../notification-popup/notification-p
 })
 export class LoginComponent {
   loginForm:FormGroup;
-  constructor(private loginService:LoginService,private formBuilder:FormBuilder,private geoService:GeoService,private dialog:MatDialog){
+  constructor(private loginService:LoginService,private formBuilder:FormBuilder,private geoService:GeoService,private dialog:MatDialog,private router:Router){
     this.loginForm=this.formBuilder.group({firstName:'',lastName:'',username:'',phoneNumber:'',location:'',password:''});
   }
   suggestions: string[] = [];
@@ -69,18 +70,34 @@ export class LoginComponent {
   
   const password = this.loginForm.value.password;
   const username = this.loginForm.value.username;
-  if(arg == 'login')
-  {
-    this.loginService.login(username,password).subscribe((respo)=>{console.log(respo)
-    this.loginService.getUser(respo.access_token).subscribe((res)=>{console.log(res)})
-    })
-  }
+  if(password.length<3 || username.length<3)
+    this.dialog.open(NotificationPopupComponent,{ data: { title: "Please enter valid credentials", text:"Fields should have at least 3 characters each."  }})
+    else if (arg == 'login') {
+      this.loginService.login(username, password).subscribe((respo:any) => {
+        console.log(respo);
+    
+        if (respo.status !=400) {
+          
+          this.loginService.getUser(respo.access_token).subscribe((res) => {
+            console.log(res);
+            this.router.navigate([`/front-page`])
+          });
+        } else {
+          console.log('a')
+          this.dialog.open(NotificationPopupComponent,{ data: { title: "Please enter valid credentials", text:"Username or password are incorrect"  }})
+        }
+      });
+    }
   else
   {
     const locationName:string = this.loginForm.value.location;
     const firstName = this.loginForm.value.firstName;
     const lastName = this.loginForm.value.lastName;
     const phoneNumber = this.loginForm.value.phoneNumber;
+    const isPhoneNumberValid: boolean = /^\d+$/.test(phoneNumber);
+    if(!isPhoneNumberValid || locationName.length<3 || firstName.length<3 || lastName.length<3 ||phoneNumber.length<3)
+    this.dialog.open(NotificationPopupComponent,{ data: { title: "Please enter valid credentials", text:"Fields should have at least 3 characters each."  }})
+    else{
     let location={name:locationName,lattitude:0,longitude:0};
     await this.getCoordinates(locationName).toPromise().then((res) => {
       location.lattitude = res?.lattitude ?? 0;
@@ -89,6 +106,7 @@ export class LoginComponent {
     this.loginService.signUp(firstName,lastName,username,phoneNumber,location,password).subscribe((respo)=>{console.log(respo)
       this.dialog.open(NotificationPopupComponent,{ data: { title: "Please login now", text:"Enter your username and password"  }})
     });
+  }
   }
  
   

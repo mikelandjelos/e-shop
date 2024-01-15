@@ -27,4 +27,8 @@ export class LoginService {
      this.httpClient.post(environment.api+"customer/addLocation",bodyLocation).subscribe((respo)=>console.log(respo))
     return this.httpClient.post(environment.api+"customer/",body)
   }
+  logout(username:string)
+  {
+    return this.httpClient.delete(`${environment.api}customer/Logout/${username}`)
+  }
 }

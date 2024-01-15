@@ -70,4 +70,9 @@ export class CustomerController {
   ) {
     return this.customerService.getCitiesInRange(username, range);
   }
+  @Delete('Logout/:username')
+  logout( @Param('username') username: string)
+  {
+    return this.customerService.logout(username);
+  }
 }

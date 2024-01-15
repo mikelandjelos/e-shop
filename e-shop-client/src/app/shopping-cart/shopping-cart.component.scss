@@ -68,25 +68,30 @@
     }
   }
   
-  .cart_wrapper {
-    max-width: 1200px;
-    width: 100%;
-    max-height: 800px;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: white;
-    box-shadow: 0 6px 32px rgba(0, 0, 0, 0.4);
-    margin: 30px;
-    overflow: hidden;
-    @include size(md-device) {
-      max-height: 1000px;
-    }
-    @include size(sm-device) {
-      max-height: unset;
-      max-width: 100%;
-      margin: 15px;
-    }
-  
+ .cart_wrapper {
+  max-width: 1200px;
+  width: 100%;
+  max-height: 800px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: white;
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.4);
+  margin: auto; /* Automatsko centriranje po horizontali */
+  margin-top: 30px; /* Dodajte margin-top ako želite zadržati razmak od 30px na vrhu */
+  margin-bottom: 30px; /* Dodajte margin-bottom ako želite zadržati razmak od 30px na dnu */
+  overflow: hidden;
+
+  @include size(md-device) {
+    max-height: 1000px;
+  }
+
+  @include size(sm-device) {
+    max-height: unset;
+    max-width: 100%;
+    margin: 15px;
+  }
+
+
     // cart_lists
     .cart_lists {
       background-color: #ecf0f1;

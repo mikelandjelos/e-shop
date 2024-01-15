@@ -73,4 +73,9 @@ export class CustomerService {
     );
     return citiesInRange;
   }
+  async logout(username:string){
+    const redis = new Redis({ host: 'localhost', port: 6389 });
+    await redis.del(username);
+    
+  }
 }

@@ -1,3 +1,4 @@
+<app-header></app-header>
 <section class="cart_wrapper">
     <div class="cart_lists">
       <div class="cart_title">
@@ -37,7 +38,7 @@
         </div>
         <div class="footer">
           <div class="back_cart">
-            <a href="#back">
+            <a (click)="navigateTo('front-page') " style="cursor: pointer;">
               <span class="material-icons-outlined">west</span>
               Back to Shop
             </a>
