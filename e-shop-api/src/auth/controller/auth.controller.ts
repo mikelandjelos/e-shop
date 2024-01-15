@@ -16,8 +16,8 @@ export class AuthController {
   @Get('user')
   async getUser(@Request() req): Promise<any> {
     const rcN = new Redis({ port: 6389, host: 'localhost' });
-    rcN.hset(req.user.username,req.user);
-    rcN.hget
+   // rcN.hset(req.user.username,req.user);
+   // rcN.hget
     return req.user;
   }
 }
