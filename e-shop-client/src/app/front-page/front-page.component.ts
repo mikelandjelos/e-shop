@@ -38,6 +38,7 @@ export class FrontPageComponent {
   ) {
     productService.getTopSales().subscribe((respo) => {
       const mergedArrivals = [].concat(...respo);
+      console.log(respo)
       this.topSales = mergedArrivals;
       if(this.topSales!=null && this.topSales!=undefined && this.topSales.length>0)
       this.processImages();

@@ -34,9 +34,16 @@ export class ShoppingCartComponent {
     const num =parseInt(selectedValue);
        product.price *= num;
       this.total +=product.price;
-   
+      product.quantity = num;
   }
   navigateTo(route:string){
     this.router.navigate([`/${route}`]);
+  }
+  checkout()
+  {
+    this.productService.deleteAllFromCart().subscribe((respo)=>console.log(respo));
+    this.products.forEach((el:any)=>{
+        this.productService.checkout(el.id,el.quantity).subscribe((respo)=>console.log(respo))
+    })
   }
 }

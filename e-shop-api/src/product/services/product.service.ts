@@ -30,8 +30,9 @@ export class ProductService {
     await redisClient.ts.create(saved.id);
     await redisClient.disconnect();
     const rC = new Redis({ port: 6390, host: 'localhost' });
-    await rC.xadd('created', '*', 'id', saved.id);
+    const value =await rC.xadd('created', '*', 'id', saved.id);
     const rCN = new Redis({ port: 6389, host: 'localhost' });
+    rCN.set('stream'+saved.id,value);
     await rCN.hset('created' + saved.id, saved);
     const score = saved.stock;
     await rC.zadd('topSales',score,saved.id);
@@ -88,16 +89,25 @@ export class ProductService {
 
         if (product.stock <= 0) {
           const productID = product.id;
-          const score = await rC.zscore('stock', productID);
-          if (score) await rC.zrem('stock', product.id);
-          const keyExists = await rC.hgetall(productID);
-          console.log(keyExists);
-          if (keyExists != null) await rC.del(productID);
+          await rC.zrem('stock', product.id);
+          await rC.zrem('topSales',product.id);
+          const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });await redisClient.connect();
+         const ts= await redisClient.ts.get(product.id);
+         console.log(ts)
+         const timestamp = ts.timestamp;
+         console.log(timestamp)
+         //const obj =  await redisClient.xRead('created',productID);
+         const obj = await rcN.get('stream'+product.id);
+         await redisClient.xDel('created',obj);
+        //  await redisClient.ts.del(product.id,'-','+');
+        //  console.log(ts)
+          redisClient.disconnect();
+
           return await this.productRepository.delete(id);
+         
         }
         await rC.zincrby('topSales',-count,product.id);
-        if(product.stock == 0)
-        await rC.zrem('topSales',product.id);
+        
         await this.productRepository.update({ id }, { stock: product.stock });
 
         const productScore = await rC.zscore('stock', product.id);
@@ -108,13 +118,13 @@ export class ProductService {
         }
 
         await rcN.hmset(product.id, product);
-        console.log('c');
+       
         return product;
       } else {
         throw new Error('Product not found');
       }
     } catch (error) {
-      console.error('Error:', error.message);
+     
       throw error;
     } finally {
       //rC.quit();
@@ -131,7 +141,7 @@ export class ProductService {
       elements = await rC.xrevrange('created', '+', '-', 'COUNT', 4);
     else if( name =='topSales')
     elements = await rC.zrange(name, 0, 3);
-    console.log(elements);
+    console.log(elements)
     const promises = elements.map(async (el) => {
       let elRet;
       if (name == 'stock') elRet = await rCN.hgetall(el);
@@ -145,7 +155,7 @@ export class ProductService {
       if (Object.keys(elRet).length !== 0) return elRet;
     });
     let retelements = await Promise.all(promises);
-    console.log(retelements)
+    if(retelements.length>0)
     retelements = retelements.filter((e) => e != null);
     if (elements.length > 0) {
       const promisesDb = elements.map(async (el) => {
@@ -311,9 +321,9 @@ export class ProductService {
   }
   async addToCart(product:any){
     const cacheKey = `cart:${product.product.id}`;
-    console.log(product.product)
+    
     product.product.blob = product.product.blob.changingThisBreaksApplicationSecurity;
-    console.log(product.product)
+   
     const rCN = new Redis({ port: 6389, host: 'localhost' });
     await rCN.hset(cacheKey,product.product);
     return product ;
@@ -344,8 +354,7 @@ export class ProductService {
     });
   
     await Promise.all(deletionPromises);
-  
-    console.log(`Deleted ${keys.length} products from Redis cache.`);
+ 
   }
   async deleteAllKeys() {
    
@@ -364,6 +373,6 @@ export class ProductService {
   
     await Promise.all(deletionPromises);
   
-    console.log(`Deleted ${keys.length} products from Redis cache.`);
+   
   }
 }

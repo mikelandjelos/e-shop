@@ -48,4 +48,14 @@ export class ProductService {
   getAllFromCart():Observable<any>{
     return this.httpClient.get(`${environment.api}product/GetProductsFromCart`);
   }
+  checkout(id:string,count:number){
+    
+    return this.httpClient.put(`${environment.api}product/decreaseStock/${id}/${count}`,{});  
+  
+  }
+  deleteAllFromCart(){
+    
+    return this.httpClient.delete(`${environment.api}product/DeleteFromCache`);  
+  
+  }
 }
