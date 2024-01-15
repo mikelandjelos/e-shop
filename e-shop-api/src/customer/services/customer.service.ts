@@ -78,4 +78,11 @@ export class CustomerService {
     await redis.del(username);
     
   }
+  async getUserCredentials(username:string)
+  {
+    console.log(username);
+    const redis = new Redis({ host: 'localhost', port: 6389 });
+    const obj = await redis.get(username);
+    return obj;
+  }
 }

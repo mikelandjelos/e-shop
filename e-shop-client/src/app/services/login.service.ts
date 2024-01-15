@@ -31,4 +31,9 @@ export class LoginService {
   {
     return this.httpClient.delete(`${environment.api}customer/Logout/${username}`)
   }
+  getUserCredentials(username:string)
+  {
+    console.log(username);
+    return this.httpClient.get(`${environment.api}customer/GetUserCredentiales/${username}`)
+  }
 }

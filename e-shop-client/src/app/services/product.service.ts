@@ -33,6 +33,9 @@ export class ProductService {
   getNewArrivals():Observable<any>{
     return this.httpClient.get(environment.api+'product/LastFour');
   }
+  getOutOfStock():Observable<any>{
+    return this.httpClient.get(environment.api+'product/OutOfStock');
+  }
   getLastMeasuredValue(id:string){
     return this.httpClient.get(`${environment.api}product/lastView/${id}`);
   }

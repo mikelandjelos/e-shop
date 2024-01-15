@@ -12,7 +12,7 @@ import Redis from 'ioredis';
 import { createClient } from 'redis';
 import { Observable, catchError, forkJoin, map, of } from 'rxjs';
 import * as uuid from 'uuid';
-
+import { promisify } from 'util';
 import path = require('path');
 
 @Injectable()
@@ -33,7 +33,11 @@ export class ProductService {
     await rC.xadd('created', '*', 'id', saved.id);
     const rCN = new Redis({ port: 6389, host: 'localhost' });
     await rCN.hset('created' + saved.id, saved);
-    this.invalidateCacheForAllProductCategories();
+    const score = saved.stock;
+    await rC.zadd('topSales',score,saved.id);
+    await rCN.hmset('topSales'+saved.id,saved);
+    await rC.disconnect();
+    await this.invalidateCacheForAllProductCategories();
     return saved;
   }
   async viewProduct(id: string) {
@@ -91,7 +95,9 @@ export class ProductService {
           if (keyExists != null) await rC.del(productID);
           return await this.productRepository.delete(id);
         }
-
+        await rC.zincrby('topSales',-count,product.id);
+        if(product.stock == 0)
+        await rC.zrem('topSales',product.id);
         await this.productRepository.update({ id }, { stock: product.stock });
 
         const productScore = await rC.zscore('stock', product.id);
@@ -116,15 +122,21 @@ export class ProductService {
     }
   }
   async getFourWithMostScore(name: string) {
+    
     const rC = new Redis({ port: 6390, host: 'localhost' });
     const rCN = new Redis({ port: 6389, host: 'localhost' });
     let elements = [];
     if (name == 'stock') elements = await rC.zrevrange(name, 0, 3);
     else if (name == 'created')
       elements = await rC.xrevrange('created', '+', '-', 'COUNT', 4);
+    else if( name =='topSales')
+    elements = await rC.zrange(name, 0, 3);
+    console.log(elements);
     const promises = elements.map(async (el) => {
       let elRet;
       if (name == 'stock') elRet = await rCN.hgetall(el);
+      else if(name =='topSales')
+      elRet = await rCN.hgetall(name+el);
       else if (name == 'created')
         elRet = await rCN.hgetall('created' + el[1][1]);
       if (Object.keys(elRet).length !== 0) {
@@ -133,6 +145,7 @@ export class ProductService {
       if (Object.keys(elRet).length !== 0) return elRet;
     });
     let retelements = await Promise.all(promises);
+    console.log(retelements)
     retelements = retelements.filter((e) => e != null);
     if (elements.length > 0) {
       const promisesDb = elements.map(async (el) => {
@@ -156,7 +169,16 @@ export class ProductService {
       ),
     );
   }
-
+  async hotSales(product:CreateProductDto)
+  {
+    const rC = new Redis({ port: 6390, host: 'localhost' });
+    const rCn = new Redis({ port: 6389, host: 'localhost' });
+    
+    const score = product.stock;
+    await rC.zadd('topSales',score,product.id);
+    await rCn.hmset('topSales'+product.id,product);
+    
+  }
   async decreasePrice(newPrice: number, id: string) {
     const product = await this.productRepository.findOne({ where: { id } });
     if (!product) {
@@ -245,11 +267,12 @@ export class ProductService {
   private async invalidateCacheForAllProductCategories() {
     // Example: Delete all keys starting with 'products:'
     const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
-
+    redisClient.connect();
     const keys = await redisClient.keys(`products:*`);
 
     // Delete keys concurrently
     await Promise.all(keys.map((key) => redisClient.del(key)));
+    redisClient.disconnect();
   }
 
   async findOne(id: string): Promise<Product | undefined> {
@@ -316,6 +339,25 @@ export class ProductService {
 
     const keys = await rCN.keys(`cart:*`);
 
+    const deletionPromises = keys.map(async (key) => {
+      await rCN.del(key);
+    });
+  
+    await Promise.all(deletionPromises);
+  
+    console.log(`Deleted ${keys.length} products from Redis cache.`);
+  }
+  async deleteAllKeys() {
+   
+    const rCN = new Redis({ port: 6389, host: 'localhost' });
+    const rC = new Redis({ port: 6390, host: 'localhost' });
+ 
+    const keys = await rCN.keys(`*`);
+    const keys2 = await rC.keys('*');
+    const deletionPromises1 = keys2.map(async (key) => {
+      await rC.del(key);
+    });
+   
     const deletionPromises = keys.map(async (key) => {
       await rCN.del(key);
     });

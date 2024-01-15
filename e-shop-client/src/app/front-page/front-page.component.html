@@ -14,7 +14,7 @@
             an unwavering commitment to exceptional quality.
           </p>
         </div>
-        <button (click)="openDialog()">
+        <button >
           SHOP NOW<i class="bx bx-right-arrow-alt"></i>
         </button>
         <div class="home_social_icons">
@@ -57,8 +57,8 @@
       <h2>Top Sales</h2>
 
       <div class="best-seller" *ngIf="changeSales">
-        <div class="best-p1" *ngFor="let product of topSales">
-          <img [src]="product.blob" alt="img" />
+        <div class="best-p1" *ngFor="let product of topSales"(click)="openPopup(product)">
+          <img [src]="product.blob"  alt="https://picsum.photos" />
           <div class="best-p1-txt">
             <div class="name-of-p">
               <p>{{ product.name }}</p>
@@ -79,11 +79,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button>
-                <a href="https://codepen.io/sanketbodke/full/mdprZOq"
-                  >Buy Now</a
-                >
-              </button>
+              <button>View detail</button>
             </div>
             <!-- <div class="add-cart">
                           <button>Add To Cart</button>
@@ -100,7 +96,7 @@
           *ngFor="let product of newArrivals"
           (click)="openPopup(product)"
         >
-          <img [src]="product.blob" alt="img" />
+          <img [src]="product.blob"  alt="img" />
           <div class="best-p1-txt">
             <div class="name-of-p">
               <p>{{ product.name }}</p>
@@ -129,12 +125,12 @@
     </div>
     <div class="seller container">
       <h2>Hot Sales</h2>
-      <div class="best-seller">
-        <div class="best-p1" (click)="open()">
-          <img src="https://i.postimg.cc/jS7pSQLf/na4.png" alt="img" />
+      <div class="best-seller"*ngIf="changeOutOfStock">
+        <div class="best-p1" *ngFor="let product of outOfStock"(click)="openPopup(product)">
+          <img [src]="product.blob"  alt="img" />
           <div class="best-p1-txt">
             <div class="name-of-p">
-              <p>PS England Shoes</p>
+              <p>{{ product.name }}</p>
             </div>
             <div class="rating">
               <i class="bx bxs-star"></i>
@@ -144,7 +140,7 @@
               <i class="bx bxs-star"></i>
             </div>
             <div class="price">
-              &dollar;37.24
+              &dollar;{{ product.price }}
               <div class="colors">
                 <i class="bx bxs-circle grey"></i>
                 <i class="bx bxs-circle black"></i>
@@ -152,104 +148,13 @@
               </div>
             </div>
             <div class="buy-now">
-              <button>
-                <a href="https://codepen.io/sanketbodke/full/mdprZOq"
-                  >Buy Now</a
-                >
-              </button>
+              <button>View detail</button>
             </div>
           </div>
         </div>
-        <div class="best-p1">
-          <img src="https://i.postimg.cc/fbnB2yfj/na1.png" alt="img" />
-          <div class="best-p1-txt">
-            <div class="name-of-p">
-              <p>PS England T-Shirt</p>
-            </div>
-            <div class="rating">
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-            </div>
-            <div class="price">
-              &dollar;10.23
-              <div class="colors">
-                <i class="bx bxs-circle blank"></i>
-                <i class="bx bxs-circle blue"></i>
-                <i class="bx bxs-circle brown"></i>
-              </div>
-            </div>
-            <div class="buy-now">
-              <button>
-                <a href="https://codepen.io/sanketbodke/full/mdprZOq"
-                  >Buy Now</a
-                >
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="best-p1">
-          <img src="https://i.postimg.cc/RhVP7YQk/hs1.png" alt="img" />
-          <div class="best-p1-txt">
-            <div class="name-of-p">
-              <p>PS England T-Shirt</p>
-            </div>
-            <div class="rating">
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-              <i class="bx bxs-star"></i>
-            </div>
-            <div class="price">
-              &dollar;15.24
-              <div class="colors">
-                <i class="bx bxs-circle blank"></i>
-                <i class="bx bxs-circle red"></i>
-                <i class="bx bxs-circle blue"></i>
-              </div>
-            </div>
-            <div class="buy-now">
-              <button>
-                <a href="https://codepen.io/sanketbodke/full/mdprZOq"
-                  >Buy Now</a
-                >
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="best-p1">
-          <img src="https://i.postimg.cc/zD02zJq8/na2.png" alt="img" />
-          <div class="best-p1-txt">
-            <div class="name-of-p">
-              <p>PS England Bag</p>
-            </div>
-            <div class="rating">
-              <i class="bx bxs-star"></i>
-              <i class="bx bx-star"></i>
-              <i class="bx bx-star"></i>
-              <i class="bx bx-star"></i>
-              <i class="bx bx-star"></i>
-            </div>
-            <div class="price">
-              &dollar;09.28
-              <div class="colors">
-                <i class="bx bxs-circle blank"></i>
-                <i class="bx bxs-circle grey"></i>
-                <i class="bx bxs-circle brown"></i>
-              </div>
-            </div>
-            <div class="buy-now">
-              <button>
-                <a href="https://codepen.io/sanketbodke/full/mdprZOq"
-                  >Buy Now</a
-                >
-              </button>
-            </div>
-          </div>
-        </div>
+       
+         
+        
       </div>
     </div>
   </section>

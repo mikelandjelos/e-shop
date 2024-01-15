@@ -70,6 +70,10 @@ export class ProductController {
   decreaseStock(@Param('id') id: string, @Param('count') count: number) {
     return this.productService.decreaseProduct(id, count);
   }
+  @Get('OutOfStock')
+  getOutOfStock() {
+    return this.productService.getFourWithMostScore('topSales');
+  }
   @Get('TopSales')
   getTopSales() {
     return this.productService.getFourWithMostScore('stock');
@@ -125,4 +129,10 @@ export class ProductController {
   {
     return this.productService.deleteAllProductsFromRedisCache();
   }
+  @Delete('DeleteAll')
+  deleteAll()
+  {
+    return this.productService.deleteAllKeys();
+  }
+
 }

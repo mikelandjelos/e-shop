@@ -5,4 +5,5 @@ export class CreateCustomerDto {
   lastName: string;
   password: string;
   phoneNumber: string;
+  role:string;
 }

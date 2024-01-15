@@ -78,8 +78,10 @@ export class LoginComponent {
     
         if (respo.status !=400) {
           
-          this.loginService.getUser(respo.access_token).subscribe((res) => {
+          this.loginService.getUser(respo.access_token).subscribe((res:any) => {
             console.log(res);
+            localStorage.setItem('username',username);
+            localStorage.setItem('role',res.role);
             this.router.navigate([`/front-page`])
           });
         } else {

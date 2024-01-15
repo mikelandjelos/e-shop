@@ -21,7 +21,8 @@ export class Customer {
 
   @Column({ type: 'varchar', name: 'phone_number', length: 50 })
   phoneNumber: string;
-
+  @Column({ type: 'varchar', name: 'role', length: 50,default:'user' })
+  role: string;
   // ADDRESS - REDIS???
 
   @OneToMany(() => Order, (order) => order.customer)

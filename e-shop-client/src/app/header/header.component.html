@@ -19,9 +19,11 @@
         <span class="line line3"></span>
       </div>
       <ul class="menu-items">
+        <li  (click)="openDialog()" style="cursor: pointer;" *ngIf="isAdmin">Admin</li>
         <li (click)="navigateTo('front-page')" style="cursor: pointer; ">Home</li>
         <li (click)="navigateTo('cart')" style="cursor: pointer;">Cart</li>
         <li (click)="logOut('login')" style="cursor: pointer; ">Log Out</li>
+        
       </ul>
       <div class="logo">
         <img src="https://i.postimg.cc/TP6JjSTt/logo.webp" alt="" />

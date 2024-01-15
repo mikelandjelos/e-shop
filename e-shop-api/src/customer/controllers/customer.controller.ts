@@ -75,4 +75,12 @@ export class CustomerController {
   {
     return this.customerService.logout(username);
   }
+  @Get('GetUserCredentiales/:username')
+  getUserCredentiales(
+    @Param('username') username: string
+   
+  ) {
+    console.log(username);
+    return this.customerService.getUserCredentials(username);
+  }
 }
