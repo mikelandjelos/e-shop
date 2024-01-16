@@ -4,16 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateProductDto } from '../dto/create-product.dto';
-import { UpdateProductDto } from '../dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entities/product.entity';
 import { Repository } from 'typeorm';
 import Redis from 'ioredis';
 import { createClient } from 'redis';
-import { Observable, catchError, forkJoin, map, of } from 'rxjs';
-import * as uuid from 'uuid';
-import { promisify } from 'util';
 import path = require('path');
+import { of } from 'rxjs';
 
 @Injectable()
 export class ProductService {
@@ -23,6 +20,7 @@ export class ProductService {
   ) {}
   public readonly PAGE_CACHE_EXPIRATION: number = 120;
   async create(createProductDto: CreateProductDto) {
+    console.log(createProductDto);
     const saved = await this.productRepository.save(createProductDto);
 
     const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
@@ -30,53 +28,51 @@ export class ProductService {
     await redisClient.ts.create(saved.id);
     await redisClient.disconnect();
     const rC = new Redis({ port: 6390, host: 'localhost' });
-    const value =await rC.xadd('created', '*', 'id', saved.id);
+    const value = await rC.xadd('created', '*', 'id', saved.id);
     const rCN = new Redis({ port: 6389, host: 'localhost' });
-    rCN.set('stream'+saved.id,value);
+    rCN.set('stream' + saved.id, value);
     await rCN.hset('created' + saved.id, saved);
     const score = saved.stock;
-    await rC.zadd('topSales',score,saved.id);
-    await rCN.hmset('topSales'+saved.id,saved);
+    await rC.zadd('topSales', score, saved.id);
+    await rCN.hmset('topSales' + saved.id, saved);
     await rC.disconnect();
     await this.invalidateCacheForAllProductCategories();
     return saved;
   }
   async viewProduct(id: string) {
-    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });await redisClient.connect();
-   await redisClient.ts.add(id, '*', 1);await redisClient.disconnect();
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
+    await redisClient.connect();
+    await redisClient.ts.add(id, '*', 1);
+    await redisClient.disconnect();
   }
   async getNumberOfViews(id: string) {
     const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
     const currentTimestamp = Date.now();
     redisClient.connect();
     const oneHourAgoTimestamp = currentTimestamp - 60 * 60 * 1000;
-    const num =await redisClient.ts.range(id, oneHourAgoTimestamp, '+'); redisClient.disconnect(); const sum = num.length;return sum;
+    const num = await redisClient.ts.range(id, oneHourAgoTimestamp, '+');
+    redisClient.disconnect();
+    const sum = num.length;
+    return sum;
   }
-  async getLastMeasuredValue(id:string):Promise<any>{
+  async getLastMeasuredValue(id: string): Promise<any> {
     const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });
     await redisClient.connect();
     const rangeResult = await redisClient.ts.range(id, '-', '+');
     if (rangeResult && rangeResult.length > 0) {
-      const lastMeasuredValue = rangeResult[rangeResult.length-1]; 
-    
-      if (lastMeasuredValue ) {
-        
-        
-          const timestamp = lastMeasuredValue.timestamp;
-          const date = new Date(timestamp);
-          const formattedDate = date.toLocaleString(); 
-         
-          return [rangeResult.length,formattedDate];
+      const lastMeasuredValue = rangeResult[rangeResult.length - 1];
+
+      if (lastMeasuredValue) {
+        const timestamp = lastMeasuredValue.timestamp;
+        const date = new Date(timestamp);
+        const formattedDate = date.toLocaleString();
+
+        return [rangeResult.length, formattedDate];
       }
-      
-  }
-  await redisClient.disconnect();
-  }
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+    }
+    await redisClient.disconnect();
   }
 
-  
   async decreaseProduct(id: string, count: number): Promise<Object> {
     const rC = new Redis({ port: 6390, host: 'localhost' });
     const rcN = new Redis({ port: 6389, host: 'localhost' });
@@ -90,24 +86,26 @@ export class ProductService {
         if (product.stock <= 0) {
           const productID = product.id;
           await rC.zrem('stock', product.id);
-          await rC.zrem('topSales',product.id);
-          const redisClient = await createClient({ url: 'redis://127.0.0.1:6390' });await redisClient.connect();
-         const ts= await redisClient.ts.get(product.id);
-         console.log(ts)
-         const timestamp = ts.timestamp;
-         console.log(timestamp)
-         //const obj =  await redisClient.xRead('created',productID);
-         const obj = await rcN.get('stream'+product.id);
-         await redisClient.xDel('created',obj);
-        //  await redisClient.ts.del(product.id,'-','+');
-        //  console.log(ts)
+          await rC.zrem('topSales', product.id);
+          const redisClient = await createClient({
+            url: 'redis://127.0.0.1:6390',
+          });
+          await redisClient.connect();
+          const ts = await redisClient.ts.get(product.id);
+          console.log(ts);
+          const timestamp = ts.timestamp;
+          console.log(timestamp);
+          //const obj =  await redisClient.xRead('created',productID);
+          const obj = await rcN.get('stream' + product.id);
+          await redisClient.xDel('created', obj);
+          //  await redisClient.ts.del(product.id,'-','+');
+          //  console.log(ts)
           redisClient.disconnect();
 
           return await this.productRepository.delete(id);
-         
         }
-        await rC.zincrby('topSales',-count,product.id);
-        
+        await rC.zincrby('topSales', -count, product.id);
+
         await this.productRepository.update({ id }, { stock: product.stock });
 
         const productScore = await rC.zscore('stock', product.id);
@@ -118,13 +116,12 @@ export class ProductService {
         }
 
         await rcN.hmset(product.id, product);
-       
+
         return product;
       } else {
         throw new Error('Product not found');
       }
     } catch (error) {
-     
       throw error;
     } finally {
       //rC.quit();
@@ -132,21 +129,18 @@ export class ProductService {
     }
   }
   async getFourWithMostScore(name: string) {
-    
     const rC = new Redis({ port: 6390, host: 'localhost' });
     const rCN = new Redis({ port: 6389, host: 'localhost' });
     let elements = [];
     if (name == 'stock') elements = await rC.zrevrange(name, 0, 3);
     else if (name == 'created')
       elements = await rC.xrevrange('created', '+', '-', 'COUNT', 4);
-    else if( name =='topSales')
-    elements = await rC.zrange(name, 0, 3);
-    console.log(elements)
+    else if (name == 'topSales') elements = await rC.zrange(name, 0, 3);
+    console.log(elements);
     const promises = elements.map(async (el) => {
       let elRet;
       if (name == 'stock') elRet = await rCN.hgetall(el);
-      else if(name =='topSales')
-      elRet = await rCN.hgetall(name+el);
+      else if (name == 'topSales') elRet = await rCN.hgetall(name + el);
       else if (name == 'created')
         elRet = await rCN.hgetall('created' + el[1][1]);
       if (Object.keys(elRet).length !== 0) {
@@ -155,8 +149,8 @@ export class ProductService {
       if (Object.keys(elRet).length !== 0) return elRet;
     });
     let retelements = await Promise.all(promises);
-    if(retelements.length>0)
-    retelements = retelements.filter((e) => e != null);
+    if (retelements.length > 0)
+      retelements = retelements.filter((e) => e != null);
     if (elements.length > 0) {
       const promisesDb = elements.map(async (el) => {
         const id = el;
@@ -179,15 +173,13 @@ export class ProductService {
       ),
     );
   }
-  async hotSales(product:CreateProductDto)
-  {
+  async hotSales(product: CreateProductDto) {
     const rC = new Redis({ port: 6390, host: 'localhost' });
     const rCn = new Redis({ port: 6389, host: 'localhost' });
-    
+
     const score = product.stock;
-    await rC.zadd('topSales',score,product.id);
-    await rCn.hmset('topSales'+product.id,product);
-    
+    await rC.zadd('topSales', score, product.id);
+    await rCn.hmset('topSales' + product.id, product);
   }
   async decreasePrice(newPrice: number, id: string) {
     const product = await this.productRepository.findOne({ where: { id } });
@@ -319,17 +311,17 @@ export class ProductService {
 
     return product;
   }
-  async addToCart(product:any){
+  async addToCart(product: any) {
     const cacheKey = `cart:${product.product.id}`;
-    
-    product.product.blob = product.product.blob.changingThisBreaksApplicationSecurity;
-   
+
+    product.product.blob =
+      product.product.blob.changingThisBreaksApplicationSecurity;
+
     const rCN = new Redis({ port: 6389, host: 'localhost' });
-    await rCN.hset(cacheKey,product.product);
-    return product ;
+    await rCN.hset(cacheKey, product.product);
+    return product;
   }
-   async getAllProductsFromCache() {
-    
+  async getAllProductsFromCache() {
     const rCN = new Redis({ port: 6389, host: 'localhost' });
 
     const keys = await rCN.keys(`cart:*`);
@@ -340,11 +332,10 @@ export class ProductService {
       const product = await rCN.hgetall(key);
       products.push(product);
     }
-  
+
     return products;
   }
   async deleteAllProductsFromRedisCache() {
-   
     const rCN = new Redis({ port: 6389, host: 'localhost' });
 
     const keys = await rCN.keys(`cart:*`);
@@ -352,27 +343,23 @@ export class ProductService {
     const deletionPromises = keys.map(async (key) => {
       await rCN.del(key);
     });
-  
+
     await Promise.all(deletionPromises);
- 
   }
   async deleteAllKeys() {
-   
     const rCN = new Redis({ port: 6389, host: 'localhost' });
     const rC = new Redis({ port: 6390, host: 'localhost' });
- 
+
     const keys = await rCN.keys(`*`);
     const keys2 = await rC.keys('*');
     const deletionPromises1 = keys2.map(async (key) => {
       await rC.del(key);
     });
-   
+
     const deletionPromises = keys.map(async (key) => {
       await rCN.del(key);
     });
-  
+
     await Promise.all(deletionPromises);
-  
-   
   }
 }

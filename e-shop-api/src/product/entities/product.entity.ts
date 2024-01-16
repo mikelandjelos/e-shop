@@ -6,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -31,11 +32,11 @@ export class Product {
   @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
   orderItems: OrderItem[];
 
-  @ManyToMany(() => Warehouse, (warehouse) => warehouse.products)
+  @ManyToOne(() => Warehouse, (warehouse) => warehouse.products)
   @JoinColumn([{ name: 'warehouse_id', referencedColumnName: 'id' }])
   warehouse: Warehouse;
 
-  @ManyToMany(() => Category, (warehouse) => warehouse.products)
+  @ManyToOne(() => Category, (category) => category.products)
   @JoinColumn([{ name: 'category_id', referencedColumnName: 'id' }])
   category: Category;
 }

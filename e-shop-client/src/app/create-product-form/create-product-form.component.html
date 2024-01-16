@@ -1,74 +1,100 @@
 <body>
-  <form action="" method="post" enctype="multipart/form-data"[formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <form
+    action=""
+    method="post"
+    enctype="multipart/form-data"
+    [formGroup]="createForm"
+    (ngSubmit)="onSubmit()"
+  >
     <div class="data-input-container">
-      <input type="text" 
-              class="create-input" 
-              id="create-input" 
-              placeholder="Ware House"
-              formControlName="wareHouse">
+      <input
+        type="text"
+        class="create-input"
+        id="create-input"
+        placeholder="Ware House"
+        formControlName="wareHouse"
+      />
       <div class="search-container">
         <div class="search-box">
-          <input type="text" 
-                  class="search-input" 
-                  id="search-input" 
-                  placeholder="Category"
-                  formControlName="category"
-                  >
-
-          <button class="search-btn"><ion-icon name="search-sharp"></ion-icon></button>
+          <select
+            class="search-input"
+            id="search-input"
+            formControlName="category"
+          >
+            <option value="" disabled selected>Select a Category</option>
+            <option *ngFor="let cat of categories$ | async" [value]="cat.id">
+              {{ cat.name }}
+            </option>
+          </select>
         </div>
         <button class="clear-btn btn">Clear</button>
       </div>
     </div>
-    <label class="drop-area"(dragover)="onDragOver($event)"
-    (drop)="onDrop($event)">>
-      <input type="file" 
-              accept="image/*" 
-              name="loadImg"
-              class="img-input"
-              (change)="onFileSelected($event)"/>
+    <label
+      class="drop-area"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)"
+      >>
+      <input
+        type="file"
+        accept="image/*"
+        name="loadImg"
+        class="img-input"
+        (change)="onFileSelected($event)"
+      />
       <div class="drop-viewer"></div>
       <div class="drop-help">
-        <p class="drop-help-text">Drag here your image or <span class="underline-hover">select the file</span></p>
+        <p class="drop-help-text">
+          Drag here your image or
+          <span class="underline-hover">select the file</span>
+        </p>
         <ion-icon class="drop-help-icon" name="cloud-upload-outline"></ion-icon>
       </div>
     </label>
     <div class="desc-grid">
       <label class="grid-input">
-        <input type="text" 
-                id="title" 
-                class="title descInput" 
-                placeholder="Title"
-                formControlName="title">
+        <input
+          type="text"
+          id="title"
+          class="title descInput"
+          placeholder="Title"
+          formControlName="title"
+        />
         <div class="count" data-type="title"></div>
       </label>
       <label class="grid-input">
-        <input type="text" 
-                id="sub_title" 
-                class="sub_title descInput" 
-                placeholder="Price"
-                formControlName="price">
+        <input
+          type="text"
+          id="sub_title"
+          class="sub_title descInput"
+          placeholder="Price"
+          formControlName="price"
+        />
         <div class="count" data-type="title"></div>
       </label>
       <label class="grid-input">
-        <textarea id="desc1" 
-                  class="desc1 descInput" 
-                  placeholder="Description"formControlName="description"></textarea>
+        <textarea
+          id="desc1"
+          class="desc1 descInput"
+          placeholder="Description"
+          formControlName="description"
+        ></textarea>
         <div class="count" data-type="desc"></div>
       </label>
       <label class="grid-input">
-        <textarea id="desc2" 
-                  class="desc2 descInput" 
-                  placeholder="Stock"
-                  formControlName="stock"></textarea>
+        <textarea
+          id="desc2"
+          class="desc2 descInput"
+          placeholder="Stock"
+          formControlName="stock"
+        ></textarea>
         <div class="count" data-type="desc"></div>
       </label>
-      
     </div>
     <div class="btn-container">
       <button class="submit-btn btn" type="submit">Save</button>
     </div>
 
-  <div class="msg-log"></div>
-</form>
+    <div class="msg-log"></div>
+  </form>
 </body>

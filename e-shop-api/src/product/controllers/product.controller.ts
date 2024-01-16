@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Put,
@@ -15,8 +14,6 @@ import {
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto } from '../dto/create-product.dto';
-import { UpdateProductDto } from '../dto/update-product.dto';
-import { Observable, of } from 'rxjs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import path = require('path');
@@ -39,6 +36,8 @@ export class ProductController {
   @Post()
   @UseInterceptors(FileInterceptor('file', storage))
   create(@UploadedFile() file, @Body() createProductDto: CreateProductDto) {
+    console.log(file);
+    console.log(createProductDto);
     createProductDto.image = file.filename;
     return this.productService.create(createProductDto);
   }
@@ -48,12 +47,6 @@ export class ProductController {
     return this.productService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
-  }
-
- 
   @Put('/incrementViews/:id')
   incrementViews(@Param('id') id: string) {
     return this.productService.viewProduct(id);
@@ -96,8 +89,7 @@ export class ProductController {
     }
   }
   @Get('LastView/:id')
-  lastView(@Param('id')id:string)
-  {
+  lastView(@Param('id') id: string) {
     return this.productService.getLastMeasuredValue(id);
   }
   @Get('paginated')
@@ -115,24 +107,19 @@ export class ProductController {
     }
   }
   @Post('setInCache')
-  setInCache(@Body() product: any)
-  {
+  setInCache(@Body() product: any) {
     return this.productService.addToCart(product);
   }
   @Get('GetProductsFromCart')
-  getFromCart()
-  {
+  getFromCart() {
     return this.productService.getAllProductsFromCache();
   }
   @Delete('DeleteFromCache')
-  deleteFromCache()
-  {
+  deleteFromCache() {
     return this.productService.deleteAllProductsFromRedisCache();
   }
   @Delete('DeleteAll')
-  deleteAll()
-  {
+  deleteAll() {
     return this.productService.deleteAllKeys();
   }
-
 }
