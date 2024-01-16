@@ -1,5 +1,5 @@
 <body>
-<app-header></app-header>
+  <app-header></app-header>
   <section id="home">
     <div class="home_page">
       <div class="home_img">
@@ -14,7 +14,7 @@
             an unwavering commitment to exceptional quality.
           </p>
         </div>
-        <button >
+        <button (click)="navigateTo('products-page')" style="cursor: pointer">
           SHOP NOW<i class="bx bx-right-arrow-alt"></i>
         </button>
         <div class="home_social_icons">
@@ -30,24 +30,30 @@
   <section id="collection">
     <div class="collections container">
       <div class="content">
-        <img src="https://i.postimg.cc/Xqmwr12c/clothing.webp" alt="img" />
+        <figure></figure>
         <div class="img-content">
           <p>Clothing Collections</p>
-          <button><a href="#sellers">SHOP NOW</a></button>
+          <button (click)="navigateTo('products-page')" style="cursor: pointer">
+            SHOP NOW
+          </button>
         </div>
       </div>
-      <div class="content2">
-        <img src="https://i.postimg.cc/8CmBZH5N/shoes.webp" alt="img" />
-        <div class="img-content2">
+      <div class="content">
+        <figure></figure>
+        <div class="img-content">
           <p>Shoes Spring</p>
-          <button><a href="#sellers">SHOP NOW</a></button>
+          <button (click)="navigateTo('products-page')" style="cursor: pointer">
+            SHOP NOW
+          </button>
         </div>
       </div>
-      <div class="content3">
-        <img src="https://i.postimg.cc/MHv7KJYp/access.webp" alt="img" />
-        <div class="img-content3">
+      <div class="content">
+        <figure></figure>
+        <div class="img-content">
           <p>Accessories</p>
-          <button><a href="#sellers">SHOP NOW</a></button>
+          <button (click)="navigateTo('products-page')" style="cursor: pointer">
+            SHOP NOW
+          </button>
         </div>
       </div>
     </div>
@@ -57,8 +63,12 @@
       <h2>Top Sales</h2>
 
       <div class="best-seller" *ngIf="changeSales">
-        <div class="best-p1" *ngFor="let product of topSales"(click)="openPopup(product)">
-          <img [src]="product.blob"  alt="https://picsum.photos" />
+        <div
+          class="best-p1"
+          *ngFor="let product of topSales"
+          (click)="openPopup(product)"
+        >
+          <img [src]="product.blob" alt="https://picsum.photos" />
           <div class="best-p1-txt">
             <div class="name-of-p">
               <p>{{ product.name }}</p>
@@ -96,7 +106,7 @@
           *ngFor="let product of newArrivals"
           (click)="openPopup(product)"
         >
-          <img [src]="product.blob"  alt="img" />
+          <img [src]="product.blob" alt="img" />
           <div class="best-p1-txt">
             <div class="name-of-p">
               <p>{{ product.name }}</p>
@@ -125,9 +135,13 @@
     </div>
     <div class="seller container">
       <h2>Hot Sales</h2>
-      <div class="best-seller"*ngIf="changeOutOfStock">
-        <div class="best-p1" *ngFor="let product of outOfStock"(click)="openPopup(product)">
-          <img [src]="product.blob"  alt="img" />
+      <div class="best-seller" *ngIf="changeOutOfStock">
+        <div
+          class="best-p1"
+          *ngFor="let product of outOfStock"
+          (click)="openPopup(product)"
+        >
+          <img [src]="product.blob" alt="img" />
           <div class="best-p1-txt">
             <div class="name-of-p">
               <p>{{ product.name }}</p>
@@ -152,9 +166,6 @@
             </div>
           </div>
         </div>
-       
-         
-        
       </div>
     </div>
   </section>
