@@ -1,3 +1,9 @@
-<button (click)="navigateTo('front-page')" style="cursor: pointer">
-  BACK TO FRONT PAGE
-</button>
+<app-header></app-header>
+
+<h1>{{ categoryName }}</h1>
+
+<div *ngIf="(products$ | async)?.products as products">
+  <div *ngFor="let product of products">
+    {{ product | json }}
+  </div>
+</div>

@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from '../dto/create-category.dto';
-import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { Category } from '../entities/category.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { createClient } from 'redis';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -69,8 +68,41 @@ export class CategoryService {
     return `This action returns a #${id} category`;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async findByName(name: string): Promise<Category | undefined> {
+    const cacheKey = `categories:name:${name.toLowerCase()}`; // Use a unique cache key for each name
+
+    const redisClient = createClient({ url: 'redis://127.0.0.1:6390' });
+
+    await redisClient.connect();
+
+    // Check if the data is in the cache
+    const cachedData = await redisClient.get(cacheKey);
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
+
+    // If not in the cache, retrieve data from the database
+    const category = await this.categoryRepository.findOne({
+      where: {
+        name: ILike(name), // ILike for case-insensitive search
+      },
+    });
+
+    // If category not found, throw NotFoundException
+    if (!category) {
+      throw new NotFoundException(`Category with name '${name}' not found`);
+    }
+
+    // Store the data in the cache for future requests
+    await redisClient.setEx(
+      cacheKey,
+      this.ALL_CATEGORIES_CACHE_EXPIRATION,
+      JSON.stringify(category),
+    );
+
+    await redisClient.disconnect();
+
+    return category;
   }
 
   remove(id: number) {

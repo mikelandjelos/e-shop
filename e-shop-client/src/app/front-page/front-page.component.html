@@ -26,32 +26,16 @@
       </div>
     </div>
   </section>
-
   <section id="collection">
     <div class="collections container">
-      <div class="content">
+      <div *ngFor="let category of categories$ | async" class="content">
         <figure></figure>
         <div class="img-content">
-          <p>Clothing Collections</p>
-          <button (click)="navigateTo('products-page')" style="cursor: pointer">
-            SHOP NOW
-          </button>
-        </div>
-      </div>
-      <div class="content">
-        <figure></figure>
-        <div class="img-content">
-          <p>Shoes Spring</p>
-          <button (click)="navigateTo('products-page')" style="cursor: pointer">
-            SHOP NOW
-          </button>
-        </div>
-      </div>
-      <div class="content">
-        <figure></figure>
-        <div class="img-content">
-          <p>Accessories</p>
-          <button (click)="navigateTo('products-page')" style="cursor: pointer">
+          <p>{{ category.name }}</p>
+          <button
+            (click)="navigateToProducts('products-page', category.name)"
+            style="cursor: pointer"
+          >
             SHOP NOW
           </button>
         </div>
@@ -61,7 +45,6 @@
   <section id="sellers">
     <div class="seller container">
       <h2>Top Sales</h2>
-
       <div class="best-seller" *ngIf="changeSales">
         <div
           class="best-p1"
@@ -91,9 +74,6 @@
             <div class="buy-now">
               <button>View detail</button>
             </div>
-            <!-- <div class="add-cart">
-                          <button>Add To Cart</button>
-                      </div> -->
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { Product } from '../products-page/products-page.component';
 
 @Injectable({
   providedIn: 'root',
@@ -73,5 +74,16 @@ export class ProductService {
   }
   deleteAllFromCart() {
     return this.httpClient.delete(`${environment.api}product/DeleteFromCache`);
+  }
+  getPaginatedFromCategory(
+    page: number = 1,
+    pageSize: number = 10,
+    categoryName: string = ''
+  ): Observable<{ products: Product[]; total: number }> {
+    return this.httpClient.get<{ products: Product[]; total: number }>(
+      environment.api +
+        `product/paginated?page=${page}&pageSize=${pageSize}` +
+        (categoryName ? `&category=${categoryName}` : '')
+    );
   }
 }

@@ -96,9 +96,14 @@ export class ProductController {
   async findPaginated(
     @Query('page') page: number = 1,
     @Query('pageSize') pageSize: number = 10,
+    @Query('category') category: string = '',
   ): Promise<{ products: Product[]; total: number }> {
     try {
-      const result = await this.productService.findPaginated(page, pageSize);
+      const result = await this.productService.findPaginated(
+        page,
+        pageSize,
+        category,
+      );
       return result;
     } catch (error) {
       // Handle errors appropriately, e.g., log and return a proper response
