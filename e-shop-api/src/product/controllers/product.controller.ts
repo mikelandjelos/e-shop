@@ -40,7 +40,7 @@ export class ProductController {
     console.log(file);
     console.log(createProductDto);
     createProductDto.image = file.filename;
-    
+
     return this.productService.create(createProductDto);
   }
 
@@ -130,14 +130,12 @@ export class ProductController {
     return this.productService.deleteAllKeys();
   }
   @Get('subscribe/:id')
-  subscribeOnProduct(@Param('id') id: string)
-  {
-    console.log(id)
+  subscribeOnProduct(@Param('id') id: string) {
+    console.log(id);
     return this.productService.subscribe(id);
   }
   @Post('pushOnChannel/:id/:message')
-  pushOnChannel(@Param('id') id: string, @Param('message') message: string)
-  {
-    return this.productService.publishToChannel(id,message);
+  pushOnChannel(@Param('id') id: string, @Param('message') message: string) {
+    return this.productService.publishToChannel(id, message);
   }
 }

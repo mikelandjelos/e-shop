@@ -371,28 +371,25 @@ export class ProductService {
 
     await Promise.all(deletionPromises);
   }
-  
-  async  subscribe(productId: string): Promise<string> {
+
+  async subscribe(productId: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        const rcN = new Redis({ port: 6389, host: 'localhost' });
+      const rcN = new Redis({ port: 6389, host: 'localhost' });
 
-        rcN.subscribe(productId);
+      rcN.subscribe(productId);
 
-        rcN.on('message', (channel, message) => {
-            const result = `Poruka na kanalu ${channel}: ${message}`;
-            console.log(result);
-            resolve(result);
-        });
-
-       
+      rcN.on('message', (channel, message) => {
+        const result = `Poruka na kanalu ${channel}: ${message}`;
+        console.log(result);
+        resolve(result);
+      });
     });
-}
-  async  publishToChannel(productId: string, message: string) {
+  }
+  async publishToChannel(productId: string, message: string) {
     const rcN = new Redis({ port: 6389, host: 'localhost' });
 
-    
     rcN.publish(productId, message);
-}
+  }
   async deleteAllKeys() {
     const rCN = new Redis({ port: 6389, host: 'localhost' });
     const rC = new Redis({ port: 6390, host: 'localhost' });
