@@ -4,6 +4,7 @@ import { LoginService } from '../services/login.service';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateProductFormComponent } from '../create-product-form/create-product-form.component';
+import { WarehouseFormComponent } from '../warehouse-form/warehouse-form.component';
 
 @Component({
   selector: 'app-header',
@@ -41,5 +42,12 @@ export class HeaderComponent {
       this.router.navigate([`/${route}`]);
     })
     
+  }
+  openDialog2()
+  {
+    const dialogRef = this.dialog.open(WarehouseFormComponent, {
+      width: '500px',
+      height: '600px',
+    });
   }
 }

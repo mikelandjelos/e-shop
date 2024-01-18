@@ -50,8 +50,19 @@ export class CustomerService {
     member: string,
   ): Promise<number> {
     const redis = new Redis({ host: 'localhost', port: 6389 });
-    redis.set(username, member);
+    redis.set("user-"+username, member);
     return redis.geoadd(name, longitude, lattitude, member);
+  }
+  async addWareHouseLocation(
+    username: string,
+    name: string,
+    longitude: number,
+    lattitude: number,
+    member: string,
+  ): Promise<number> {
+    const redis = new Redis({ host: 'localhost', port: 6389 });
+    redis.set("warehouse-"+username, member);
+    return redis.geoadd(name, longitude, lattitude,"ware"+username+member);
   }
   async getCoordinatesForCity(username) {
     const redis = new Redis({ host: 'localhost', port: 6389 });

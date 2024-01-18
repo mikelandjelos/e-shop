@@ -19,6 +19,7 @@ import { diskStorage } from 'multer';
 import path = require('path');
 import { v4 as uuidv4 } from 'uuid';
 import { Product } from '../entities/product.entity';
+import { Category } from 'src/category/entities/category.entity';
 export const storage = {
   storage: diskStorage({
     destination: './uploads/profileimages',
@@ -39,6 +40,7 @@ export class ProductController {
     console.log(file);
     console.log(createProductDto);
     createProductDto.image = file.filename;
+    
     return this.productService.create(createProductDto);
   }
 
@@ -126,5 +128,16 @@ export class ProductController {
   @Delete('DeleteAll')
   deleteAll() {
     return this.productService.deleteAllKeys();
+  }
+  @Get('subscribe/:id')
+  subscribeOnProduct(@Param('id') id: string)
+  {
+    console.log(id)
+    return this.productService.subscribe(id);
+  }
+  @Post('pushOnChannel/:id/:message')
+  pushOnChannel(@Param('id') id: string, @Param('message') message: string)
+  {
+    return this.productService.publishToChannel(id,message);
   }
 }

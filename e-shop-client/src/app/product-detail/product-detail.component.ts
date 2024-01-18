@@ -34,7 +34,20 @@ this.lastView = formattedDate;
   }
   addToCart(product:any)
   {
-    console.log(product);
     this.productService.setToCart(product).subscribe((respo)=>console.log(respo));
   }
+  follow(product: any) {
+    this.productService.follow(product).subscribe(
+      (value) => {
+        console.log('Vrednost:', value);
+      },
+      (error) => {
+        console.error('Greška:', error);
+      },
+      () => {
+        console.log('Pretplata je završena.');
+      }
+    );
+  }
 }
+

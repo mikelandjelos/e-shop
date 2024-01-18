@@ -58,6 +58,11 @@ export class ProductService {
       {}
     );
   }
+  follow(product: any): Observable<string> {
+    const id = product.id;
+    console.log(id);
+    return this.httpClient.get(`${environment.api}product/subscribe/${id}`,{ responseType: 'text' });
+  }
   setToCart(product: any) {
     return this.httpClient.post(`${environment.api}product/setInCache`, {
       product,

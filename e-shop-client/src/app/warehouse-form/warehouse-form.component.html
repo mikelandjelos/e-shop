@@ -1,0 +1,17 @@
+<body>
+<div class="main">
+    
+        <form class="form" id="a-form" [formGroup]="wareHouseForm" (ngSubmit)="onSubmit()">
+
+            <h2 class="form_title title">Create Ware House</h2>
+            
+             
+                    <input class="form__input" type="text" placeholder="WareHouse"formControlName="wareHouse">
+                    
+                   
+<input class="form__input" type="text" placeholder="Location" formControlName="location" (input)="onChange()">
+<ul class="suggestions" *ngIf="suggestions.length > 0">
+<li *ngFor="let suggestion of suggestions"(click)="selectSuggestion(suggestion)" >{{ suggestion }}</li>
+</ul>
+<button
+                    class="form__button button submit"type="submit">Create</button>

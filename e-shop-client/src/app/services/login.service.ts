@@ -36,4 +36,9 @@ export class LoginService {
     console.log(username);
     return this.httpClient.get(`${environment.api}customer/GetUserCredentiales/${username}`)
   }
+  addLocationToGeoService(wareHouse:string,location:{name:string,longitude:number|undefined,lattitude:number|undefined}|undefined)
+  {
+    const bodyLocation = {username:wareHouse,location}
+    this.httpClient.post(environment.api+"customer/addWareHouse",bodyLocation)
+  }
 }
