@@ -124,6 +124,7 @@ export class FrontPageComponent implements OnInit {
             this.createImageFromBlob(respo, 0);
 
             product.blob = this.topSalesImages[index];
+            console.log(product.blob)
             if (product.blob == undefined) {
               this.createImageFromBlob(respo, 0);
 
@@ -143,6 +144,7 @@ export class FrontPageComponent implements OnInit {
             this.createImageFromBlob(respo, 2);
 
             product.blob = this.outOfStockImages[index];
+            console.log(product.blob);
             if (product.blob == undefined) {
               this.createImageFromBlob(respo, 2);
               product.blob = this.outOfStockImages[index];

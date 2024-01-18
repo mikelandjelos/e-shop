@@ -1,9 +1,46 @@
-<app-header></app-header>
-
-<h1>{{ categoryName }}</h1>
-
-<div *ngIf="(products$ | async)?.products as products">
-  <div *ngFor="let product of products">
-    {{ product | json }}
-  </div>
-</div>
+<body>
+  <app-header></app-header>
+  
+  
+  <section id="sellers">
+    <div class="seller container" *ngIf="changes | async">
+     
+      <div class="best-seller" *ngIf="(products$ | async) as products">
+        <div *ngFor="let product of products.products"
+          class="best-p1"
+          
+          (click)="openPopup('')"
+        >
+        <img [src]="product.blob" alt="Product Image" />
+        <div class="best-p1-txt">
+            <div class="name-of-p">
+              <p >{{ product.name }}</p>
+            </div>
+            <div class="rating">
+              <i class="bx bxs-star"></i>
+              <i class="bx bxs-star"></i>
+              <i class="bx bxs-star"></i>
+              <i class="bx bx-star"></i>
+              <i class="bx bx-star"></i>
+            </div>
+            <div class="price">
+              &dollar;{{ product.price  }}
+              <div class="colors">
+                <i class="bx bxs-circle red"></i>
+                <i class="bx bxs-circle blue"></i>
+                <i class="bx bxs-circle white"></i>
+              </div>
+            </div>
+            <div class="buy-now">
+              <button>View detail</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+      
+  
+  </section>
+</body>
