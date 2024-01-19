@@ -44,26 +44,16 @@ export class CustomerService {
   }
   async addLocationToGeoSet(
     username: string,
-    name: string,
+  
     longitude: number,
     lattitude: number,
-    member: string,
+  
   ): Promise<number> {
     const redis = new Redis({ host: 'localhost', port: 6389 });
-    redis.set("user-"+username, member);
-    return redis.geoadd(name, longitude, lattitude, member);
+   
+    return redis.geoadd("users", longitude, lattitude, username);
   }
-  async addWareHouseLocation(
-    username: string,
-    name: string,
-    longitude: number,
-    lattitude: number,
-    member: string,
-  ): Promise<number> {
-    const redis = new Redis({ host: 'localhost', port: 6389 });
-    redis.set("warehouse-"+username, member);
-    return redis.geoadd(name, longitude, lattitude,"ware"+username+member);
-  }
+
   async getCoordinatesForCity(username) {
     const redis = new Redis({ host: 'localhost', port: 6389 });
     const city = await redis.get(username);

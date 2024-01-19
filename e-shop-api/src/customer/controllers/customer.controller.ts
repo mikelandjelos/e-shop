@@ -30,29 +30,13 @@ export class CustomerController {
     console.log(body);
     return this.customerService.addLocationToGeoSet(
       body.username,
-      'City',
+      
       body.location.longitude,
       body.location.lattitude,
-      body.location.name,
+     
     );
   }
-  @Post('addWareHouse')
-  addWareHouse(
-    @Body()
-    body: {
-      username: string;
-      location: { name: string; longitude: number; lattitude: number };
-    },
-  ) {
-    console.log(body);
-    return this.customerService.addWareHouseLocation(
-      body.username,
-      'City',
-      body.location.longitude,
-      body.location.lattitude,
-      body.location.name,
-    );
-  }
+ 
   @Get()
   findAll() {
     return this.customerService.findAll();
