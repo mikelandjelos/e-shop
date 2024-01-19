@@ -16,7 +16,7 @@ import { environment } from '../../environments/environment';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  username: any;
+  username: string;
   user: any;
   isAdmin: boolean;
   private socket!: Socket;
@@ -25,8 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     public dialog: MatDialog
   ) {
-    this.username = localStorage.getItem('username');
-    localStorage.removeItem('username');
+    this.username = localStorage.getItem('username') ?? '';
     const admin = localStorage.getItem('role');
     if (admin == 'admin') this.isAdmin = true;
     else this.isAdmin = false;
@@ -37,7 +36,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.socket = io(environment.api); // Replace with your server URL
 
-    this.socket.on('notification', (data) => {
+    console.log('USERNAME: ', this.username);
+
+    this.socket.on(this.username, (data) => {
       console.log(data);
     });
   }

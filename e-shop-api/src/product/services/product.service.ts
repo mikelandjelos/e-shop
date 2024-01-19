@@ -398,7 +398,7 @@ export class ProductService {
     await rcN.on('message', (channel, message) => {
       const result = `Poruka na kanalu ${channel}: ${message}`;
       console.log(result);
-      this.appGateway.server.emit('notification', {
+      this.appGateway.server.emit('vveljovic', {
         channel: productId,
         message: message,
       });
