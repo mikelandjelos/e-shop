@@ -3,6 +3,8 @@ import { ProductService } from '../services/product.service';
 import { CommonModule } from '@angular/common';import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { HeaderComponent } from '../header/header.component';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -14,7 +16,7 @@ import { Router } from '@angular/router';
 export class ShoppingCartComponent {
    products:any ; total :number=0;
    outOfStockImages: any = [];
-   constructor(private productService: ProductService, private sanitizer: DomSanitizer, private router:Router) {
+   constructor(private productService: ProductService, private sanitizer: DomSanitizer, private router:Router, private dialog:MatDialog) {
     this.productService.getAllFromCart().subscribe((respo) => {
       this.products = respo.map((product:any) => ({
         ...product,
@@ -44,7 +46,14 @@ export class ShoppingCartComponent {
   {
     this.productService.deleteAllFromCart().subscribe((respo)=>console.log(respo));
     this.products.forEach((el:any)=>{
-        this.productService.checkout(el.id,el.quantity).subscribe((respo)=>console.log(respo))
+        this.productService.checkout(el.id,el.quantity).subscribe((respo)=>{console.log(respo)
+        
+          this.dialog.open(NotificationPopupComponent, {
+            data: {
+              title: 'Your order are confirmed',
+              text: '',
+            },})
+        })
     })
   }
   outFromCart(product:any)

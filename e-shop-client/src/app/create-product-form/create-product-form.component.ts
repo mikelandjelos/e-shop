@@ -38,6 +38,9 @@ export class CreateProductFormComponent implements OnInit {
   ngOnInit(): void {
     this.categories$ = this.categoryService.findAll();
   }
+  ngOnDestroy():void{
+    window.location.reload()
+  }
   close() {
     this.dialogRef.close();
     console.log('a')
