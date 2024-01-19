@@ -8,6 +8,7 @@ import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { HeaderComponent } from './header/header.component';
 import { ProductsPageComponent } from './products-page/products-page.component';
 import { WarehouseFormComponent } from './warehouse-form/warehouse-form.component';
+import { NotificationComponent } from './notification/notification.component';
 
 export const routes: Routes = [
   { path: 'login', pathMatch: 'full', component: LoginComponent },
@@ -22,6 +23,6 @@ export const routes: Routes = [
   { path: 'cart', pathMatch: 'full', component: ShoppingCartComponent },
 
   { path: 'd', pathMatch: 'full', component: ProductDetailComponent },
-  { path: 'k', pathMatch: 'full', component: HeaderComponent },
+  { path: 'k', pathMatch: 'full', component: NotificationComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

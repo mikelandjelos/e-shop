@@ -131,9 +131,10 @@ export class ProductController {
     return this.productService.deleteAllKeys();
   }
 
-  @Get('subscribe/:id')
-  async subscribe(@Param('id') id: string) {
-    return await this.productService.subscribe(id);
+  @Get('subscribe/:id/:username')
+  async subscribe(@Param('id') id: string, @Param('username')username:string) {
+    console.log(username)
+    return await this.productService.subscribe(id,username);
   }
 
   @Post('publish/:id/:message')

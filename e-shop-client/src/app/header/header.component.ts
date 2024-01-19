@@ -7,11 +7,13 @@ import { CreateProductFormComponent } from '../create-product-form/create-produc
 import { WarehouseFormComponent } from '../warehouse-form/warehouse-form.component';
 import { Socket, io } from 'socket.io-client';
 import { environment } from '../../environments/environment';
+import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
+import { NotificationComponent } from '../notification/notification.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, CreateProductFormComponent],
+  imports: [CommonModule, CreateProductFormComponent,NotificationPopupComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -39,7 +41,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     console.log('USERNAME: ', this.username);
 
     this.socket.on(this.username, (data) => {
-      console.log(data);
+      this.dialog.open(NotificationComponent, {
+        data: {
+          title: 'Notification',
+          text: data.message,
+        }
+      });
     });
   }
   navigateTo(route: string): void {

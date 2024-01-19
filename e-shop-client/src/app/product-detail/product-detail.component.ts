@@ -11,12 +11,15 @@ import { io } from 'socket.io-client';
   styleUrl: './product-detail.component.css',
 })
 export class ProductDetailComponent {
-  numberOfViews = null;
+  numberOfViews = null;  username: string;
+
   lastView: any;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private productService: ProductService
   ) {
+    this.username = localStorage.getItem('username') ?? '';
+
     this.lastView = new Date();
     console.log('Product details:', data.product);
     productService
@@ -43,6 +46,6 @@ export class ProductDetailComponent {
       .subscribe((respo) => console.log(respo));
   }
   follow(product: any) {
-    this.productService.follow(product).subscribe(console.log);
+    this.productService.follow(product,this.username).subscribe(console.log);
   }
 }

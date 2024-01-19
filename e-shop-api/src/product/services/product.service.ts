@@ -112,11 +112,11 @@ export class ProductService {
           //  await redisClient.ts.del(product.id,'-','+');
           //  console.log(ts)
           redisClient.disconnect();
-
+          const ok = await this.publish(productID,`${product.name} out of stock!`)
           return await this.productRepository.delete(id);
         }
         await rC.zincrby('topSales', -count, product.id);
-
+        const ok = await this.publish(id,`${count} pieces of ${product.name} were sold`);
         await this.productRepository.update({ id }, { stock: product.stock });
 
         const productScore = await rC.zscore('stock', product.id);
@@ -392,13 +392,13 @@ export class ProductService {
     await Promise.all(deletionPromises);
   }
 
-  async subscribe(productId: string): Promise<string> {
+  async subscribe(productId: string, username:string): Promise<string> {
     const rcN = await new Redis({ port: 6389, host: 'localhost' });
     await rcN.subscribe(productId);
     await rcN.on('message', (channel, message) => {
       const result = `Poruka na kanalu ${channel}: ${message}`;
       console.log(result);
-      this.appGateway.server.emit('vveljovic', {
+      this.appGateway.server.emit(username, {
         channel: productId,
         message: message,
       });

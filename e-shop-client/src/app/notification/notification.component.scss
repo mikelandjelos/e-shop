@@ -34,17 +34,21 @@ $border-left-color_1: #8391A1;
 }
 
 .frame {
-  background: #e2e8f0;
-  width: 600px; /* Povećana širina frame-a */
-  height: 600px; /* Povećana visina frame-a */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background: #e2e8f0;
+    width: 280px; /* Increased width of the frame */
+    height: 200px; /* Added unit (e.g., pixels) for the height */
+    position: fixed; /* Set to a fixed position */
+    bottom: 10px; /* Adjust the value based on your preference */
+    right: 10px; /* Adjust the value based on your preference */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
 }
 .card {
     background: #fff;
-    width: 450px; /* Povećana širina kartice */
-    height: 250px; /* Povećana visina kartice */
+    width: 280px; /* Increased width of the card */
+    height: 200px; /* Increased height of the card */
     position: absolute;
     text-align: center;
     border-radius: 5px;
@@ -97,14 +101,14 @@ $border-left-color_1: #8391A1;
     animation: show 1s linear forwards;
   }
   .notification-popup {
-  position: fixed;
-  bottom: 10px; /* Prilagodite ovu vrednost prema potrebi */
-  right: 10px; /* Prilagodite ovu vrednost prema potrebi */
-  min-width: 200px; /* Prilagodite ovu vrednost prema potrebi */
-  max-width: 300px; /* Prilagodite ovu vrednost prema potrebi */
-  padding: 15px;
-  background-color: #fff; /* Prilagodite boju pozadine prema potrebi */
-  border: 1px solid #ccc; /* Prilagodite boju ivice prema potrebi */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Prilagodite senku prema potrebi */
-  z-index: 1000; /* Postavite odgovarajući z-index kako bi bio iznad ostalih elemenata */
-}
+    position: fixed;
+    bottom: 10px; /* Prilagodite ovu vrednost prema potrebi */
+    right: 10px; /* Prilagodite ovu vrednost prema potrebi */
+    min-width: 200px; /* Prilagodite ovu vrednost prema potrebi */
+    max-width: 300px; /* Prilagodite ovu vrednost prema potrebi */
+    padding: 15px;
+    background-color: #fff; /* Prilagodite boju pozadine prema potrebi */
+    border: 1px solid #ccc; /* Prilagodite boju ivice prema potrebi */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Prilagodite senku prema potrebi */
+    z-index: 1000; /* Postavite odgovarajući z-index kako bi bio iznad ostalih elemenata */
+  }

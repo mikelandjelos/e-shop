@@ -13,5 +13,7 @@ export class NotificationPopupComponent {
   }
   close(){
     this.dialogRef.close();
+    window.location.reload();    
+
   }
   }
