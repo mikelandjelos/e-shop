@@ -14,10 +14,10 @@
             </div>
             <div class="td_item item_name">
               <label class="main">{{product.name}}</label>
-              <label class="sub">Ref. 007891987</label>
+              <label class="sub">Stock: {{product.stock}}</label>
             </div>
             <div class="td_item item_color">
-              <label>{{product.category}}</label>
+              <label>{{product.description}}</label>
             </div>
             <div class="td_item item_qty">
               <select (change)="updateQuantity($event, product)">
@@ -30,7 +30,7 @@
             <div class="td_item item_price">
               <label>$ {{product.price}}</label>
             </div>
-            <div class="td_item item_remove">
+            <div class="td_item item_remove"(click)="outFromCart(product)">
               <span class="material-icons-outlined">close</span>
             </div>
           </div>

@@ -23,6 +23,6 @@ export const routes: Routes = [
   { path: 'cart', pathMatch: 'full', component: ShoppingCartComponent },
 
   { path: 'd', pathMatch: 'full', component: ProductDetailComponent },
-  { path: 'k', pathMatch: 'full', component: NotificationComponent },
+  { path: 'k', pathMatch: 'full', component: FiltersComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

@@ -6,13 +6,13 @@
   
        
   
-          <div class="cd-filter filter-is-visible"style="height: 600px; overflow-y: auto;margin-top: 30px;">
-              <form>
+<div class="cd-filter filter-is-visible" style="height: 600px; overflow-y: auto; position: fixed; top: 50%; left: 0; transform: translateY(-50%);">
+    <form [formGroup]="filtersForm" (ngSubmit)="onSubmit()" >
           
           <div class="cd-filter-block">
-                      <h4>Choose a Store</h4>
+                      <h4>Choose a filter</h4>
   
-                      <ul class="cd-filter-content cd-filters list">
+                      <!-- <ul class="cd-filter-content cd-filters list">
                           <li>
                               <input class="filter" data-filter="" type="radio" name="radioButton" id="radio1" checked>
                               <label class="radio-label" for="radio1">All</label>
@@ -25,24 +25,24 @@
   
                           <li>
                               <input class="filter" data-filter=".radio3" type="radio" name="radioButton" id="radio3">
-                              <label class="radio-label" for="radio3">Amazon.com</label>
+                              <label class="radio-label" for="radio3">Eshop.com</label>
                           </li>
                                       <li>
                               <input class="filter" data-filter=".radio4" type="radio" name="radioButton" id="radio4" disabled>
                               <label class="radio-label" for="radio4" >BestBuy.com</label>
                           </li>
-                      </ul> <!-- cd-filter-content -->
-                  </div> <!-- cd-filter-block -->
+                      </ul> -->
+                  </div>  
           
                   <div class="cd-filter-block">
                       <h4>Filter Results</h4>
                       
                       <div class="cd-filter-content">
-                          <input type="search" placeholder="Search Amazon.com">
-                      </div> <!-- cd-filter-content -->
-                  </div> <!-- cd-filter-block -->
+                          <input type="search" placeholder="Search Amazon.com"formControlName="search">
+                      </div> 
+                  </div>
   
-                  <div class="cd-filter-block">
+                  <!-- <div class="cd-filter-block">
                       <h4>Categories</h4>
   
                       <ul class="cd-filter-content cd-filters list">
@@ -76,29 +76,29 @@
                               <input class="filter" data-filter=".check3" type="checkbox" id="checkbox3">
                               <label class="checkbox-label" for="checkbox3">Apple Accessories</label>
                           </li>
-                      </ul> <!-- cd-filter-content -->
-                  </div> <!-- cd-filter-block -->
-  
+                      </ul> 
+                  </div> 
+   -->
                   <div class="cd-filter-block">
-                      <h4>Currency</h4>
+                      <h4>Range</h4>
                       
                       <div class="cd-filter-content">
                           <div class="cd-select cd-filters">
-                              <select class="filter" name="selectThis" id="selectThis">
-                                  <option value="">ARS</option>
-                                  <option value=".option1">USD</option>
-                                  <option value=".option2">BRL</option>
-                                  <option value=".option3">EUR</option>
-                                  <option value=".option4">GBP</option>
+                              <select class="filter" name="selectThis" id="selectThis"  formControlName="range">
+                                  <option value=""></option>
+                                  <option value="5">5</option>
+                                  <option value="10">10</option>
+                                  <option value="15">15</option>
+                                  <option value="20">20</option>
                               </select>
-                          </div> <!-- cd-select -->
-                      </div> <!-- cd-filter-content -->
-                  </div> <!-- cd-filter-block -->
-  
+                          </div> 
+                      </div> 
+                  </div> 
+                  <button class="form__button button submit" type="submit">Apply filters</button>
                   
               </form>
   
        
-          </div> <!-- cd-filter -->
+          </div> 
   
           

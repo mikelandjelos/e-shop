@@ -2,14 +2,16 @@
   <app-header></app-header>
 
   <section id="sellers">
+    
     <div class="seller container" *ngIf="changes | async">
+    <app-filters (filtersSelected)="handleFiltersSelected($event)"></app-filters>
       <div class="best-seller" *ngIf="products$ | async as products">
         <div
-          *ngFor="let product of products.products"
+          *ngFor="let product of products.products; let i = index"
           class="best-p1"
           (click)="openPopup('')"
         >
-          <img [src]="product.blob" alt="Product Image" />
+          <img [src]="blobImages[i]" alt="Product Image" />
           <div class="best-p1-txt">
             <div class="name-of-p">
               <p>{{ product.name }}</p>

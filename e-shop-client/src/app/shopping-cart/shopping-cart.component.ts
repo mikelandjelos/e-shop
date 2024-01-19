@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ShoppingCartComponent {
    products:any ; total :number=0;
+   outOfStockImages: any = [];
    constructor(private productService: ProductService, private sanitizer: DomSanitizer, private router:Router) {
     this.productService.getAllFromCart().subscribe((respo) => {
       this.products = respo.map((product:any) => ({
@@ -45,5 +46,11 @@ export class ShoppingCartComponent {
     this.products.forEach((el:any)=>{
         this.productService.checkout(el.id,el.quantity).subscribe((respo)=>console.log(respo))
     })
+  }
+  outFromCart(product:any)
+  {
+    console.log(product);
+    this.products=this.products.filter((el:any)=>el!=product);
+    console.log(this.products);
   }
 }
