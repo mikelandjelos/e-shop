@@ -270,27 +270,36 @@ export class ProductService {
   ) {
     const where: ObjectLiteral = {};
 
+    console.log(patternToMatch);
+    console.log(category);
+    console.log(warehouseIds);
+
     if (warehouseIds && warehouseIds.length > 0) {
       where.warehouse = { id: In(warehouseIds) };
     }
 
     if (patternToMatch) {
-      where.name = ILike(`%${patternToMatch}%`);
+      where.name = ILike(patternToMatch);
     }
 
     if (category) {
-      where.category = ILike(`%${category}%`);
+      where.category = { name: ILike(category) };
     }
 
     const options: FindManyOptions<Product> = {
-      where,
+      where: where,
       relations: ['category', 'warehouse'],
     };
 
-    const [products, total] =
-      await this.productRepository.findAndCount(options);
+    const [products, total] = await this.productRepository.findAndCount({
+      where: {
+        category: category ? { name: ILike(category) } : {},
+        warehouse: { id: In(warehouseIds) },
+      },
+      relations: ['category', 'warehouse'],
+    });
 
-    return [products, total];
+    return { products, total };
   }
 
   async bulkCreate(createProductDtos: CreateProductDto[]): Promise<Product[]> {

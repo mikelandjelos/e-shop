@@ -51,16 +51,11 @@ export class WarehouseService {
         await redisClient.geoPos('users', username)
       )[0];
 
-      console.log(longitude, latitude);
-      console.log(radius);
-
       const returnedIds = await redisClient.geoSearch(
         'warehouses',
         { latitude: latitude, longitude: longitude },
         { radius: radius, unit: 'km' },
       );
-
-      console.log(returnedIds);
 
       warehouseIds = warehouseIds.concat(returnedIds);
     } finally {

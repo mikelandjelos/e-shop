@@ -20,6 +20,12 @@ export class WarehouseService {
     );
   }
 
+  getAllWarehouseIdsForUserInRadius(username: string, radius: number) {
+    return this.httpClient.get<string[]>(
+      environment.api + `warehouse/inRadius/${username}/${radius}`
+    );
+  }
+
   findAll(): Observable<Warehouse[]> {
     return this.httpClient.get<Warehouse[]>(
       environment.api + 'warehouse/findAll'

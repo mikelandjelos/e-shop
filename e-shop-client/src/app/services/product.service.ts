@@ -86,6 +86,23 @@ export class ProductService {
     );
   }
 
+  findAllProductsForWarehouseIds(
+    searchPattern: string,
+    category: string,
+    warehouseIds: string[]
+  ) {
+    const requestBody = {
+      searchPattern,
+      category,
+      warehouseIds,
+    };
+
+    return this.httpClient.post<{ products: Product[]; total: number }>(
+      environment.api + 'product/findAllProductsForWarehouseIds',
+      requestBody
+    );
+  }
+
   follow(product: any, username: string): Observable<string> {
     const id = product.id;
     console.log(id);

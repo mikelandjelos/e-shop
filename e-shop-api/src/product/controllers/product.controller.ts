@@ -45,14 +45,18 @@ export class ProductController {
     return this.productService.create(createProductDto);
   }
 
-  @Get('findAllProductsForWarehouseIds/')
+  @Post('findAllProductsForWarehouseIds/')
   async findAllProductsForWarehouseIds(
-    @Query('pattern') pattern: string,
-    @Query('category') category: string,
-    @Body() warehouseIds: string[],
+    @Body()
+    requestBody: {
+      searchPattern: string;
+      category: string;
+      warehouseIds: string[];
+    },
   ) {
+    const { searchPattern, category, warehouseIds } = requestBody;
     return await this.productService.findAllProductsForWarehouseIds(
-      pattern,
+      searchPattern,
       category,
       warehouseIds,
     );

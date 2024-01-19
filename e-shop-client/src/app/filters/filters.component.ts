@@ -7,26 +7,27 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './filters.component.html',
-  styleUrl: './filters.component.css'
+  styleUrl: './filters.component.css',
 })
 export class FiltersComponent {
   filtersForm: FormGroup;
-  @Output() filtersSelected: EventEmitter<{ search: string, range: number}> = new EventEmitter();
-  constructor(    private formBuilder: FormBuilder    )
-  {
+  @Output() filtersSelected: EventEmitter<{
+    searchPattern: string;
+    radius: number;
+  }> = new EventEmitter();
+  constructor(private formBuilder: FormBuilder) {
     this.filtersForm = this.formBuilder.group({
       range: '',
-      search: ''
+      search: '',
     });
   }
-  onSubmit()
-  {
+  onSubmit() {
     event?.preventDefault();
-    const range = parseInt(this.filtersForm.value.range)
+    const range = parseInt(this.filtersForm.value.range);
     const selectedFilters = {
-      search:this.filtersForm.value.search,
-      range:range
-    }
+      searchPattern: this.filtersForm.value.search,
+      radius: range,
+    };
     this.filtersSelected.emit(selectedFilters);
     console.log(selectedFilters);
   }

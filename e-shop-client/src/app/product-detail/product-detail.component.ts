@@ -1,5 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 import { ProductService } from '../services/product.service';
 import { io } from 'socket.io-client';
 import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
@@ -12,12 +16,14 @@ import { NotificationPopupComponent } from '../notification-popup/notification-p
   styleUrl: './product-detail.component.css',
 })
 export class ProductDetailComponent {
-  numberOfViews = null;  username: string;
+  numberOfViews = null;
+  username: string;
 
   lastView: any;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private productService: ProductService,private dialog:MatDialog
+    private productService: ProductService,
+    private dialog: MatDialog
   ) {
     this.username = localStorage.getItem('username') ?? '';
 
@@ -42,17 +48,17 @@ export class ProductDetailComponent {
       });
   }
   addToCart(product: any) {
-    this.productService
-      .setToCart(product)
-      .subscribe((respo) => { this.dialog.open(NotificationPopupComponent, {
+    this.productService.setToCart(product).subscribe((respo) => {
+      this.dialog.open(NotificationPopupComponent, {
         data: {
           title: 'Notification',
           text: 'The product has been added to the cart',
         },
-      });});
+      });
+    });
   }
   follow(product: any) {
-    this.productService.follow(product,this.username).subscribe((respo)=>{
+    this.productService.follow(product, this.username).subscribe((respo) => {
       this.dialog.open(NotificationPopupComponent, {
         data: {
           title: 'Notification',
