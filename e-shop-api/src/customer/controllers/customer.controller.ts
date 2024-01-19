@@ -30,22 +30,16 @@ export class CustomerController {
     console.log(body);
     return this.customerService.addLocationToGeoSet(
       body.username,
-      
+
       body.location.longitude,
       body.location.lattitude,
-     
     );
   }
- 
+
   @Get()
   findAll() {
     return this.customerService.findAll();
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.customerService.findOne(+id);
-  // }
 
   @Patch(':id')
   update(
@@ -62,7 +56,7 @@ export class CustomerController {
   @Get(':username')
   getCoordinates(@Param('username') username: string) {
     console.log(username);
-    return this.customerService.getCoordinatesForCity(username);
+    return this.customerService.getCoordinatesForUser(username);
   }
   @Get(':username/:range')
   getCitiesInRange(
@@ -72,15 +66,11 @@ export class CustomerController {
     return this.customerService.getCitiesInRange(username, range);
   }
   @Delete('Logout/:username')
-  logout( @Param('username') username: string)
-  {
+  logout(@Param('username') username: string) {
     return this.customerService.logout(username);
   }
   @Get('GetUserCredentiales/:username')
-  getUserCredentiales(
-    @Param('username') username: string
-   
-  ) {
+  getUserCredentiales(@Param('username') username: string) {
     console.log(username);
     return this.customerService.getUserCredentials(username);
   }

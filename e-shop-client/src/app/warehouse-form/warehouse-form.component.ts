@@ -10,6 +10,7 @@ import { IonicModule } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { GeoService } from '../services/geo.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { WarehouseService } from '../services/warehouse.service';
 @Component({
   selector: 'app-warehouse-form',
   standalone: true,
@@ -23,7 +24,8 @@ export class WarehouseFormComponent {
   constructor(
     private geoService: GeoService,
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<WarehouseFormComponent>
+    private dialogRef: MatDialogRef<WarehouseFormComponent>,
+    private warehouseService: WarehouseService
   ) {
     this.wareHouseForm = this.formBuilder.group({
       wareHouse: '',
@@ -58,7 +60,7 @@ export class WarehouseFormComponent {
   }
   getCoordinates(
     location: string
-  ): Observable<{ name: string; longitude: number; lattitude: number }> {
+  ): Observable<{ name: string; longitude: number; latitude: number }> {
     return new Observable((observer) => {
       this.geoService.getCoordinates(location).subscribe(
         (data: any) => {
@@ -74,7 +76,7 @@ export class WarehouseFormComponent {
             const result = {
               name: location,
               longitude: center.lng,
-              lattitude: center.lat,
+              latitude: center.lat,
             };
             observer.next(result);
           } else {
@@ -95,7 +97,14 @@ export class WarehouseFormComponent {
     this.getCoordinates(this.wareHouseForm.value.location).subscribe((resp) => {
       console.log(this.wareHouseForm.value.wareHouse);
       console.log(resp.longitude);
-      console.log(resp.lattitude);
+      console.log(resp.latitude);
+      this.warehouseService
+        .create(
+          this.wareHouseForm.value.wareHouse,
+          resp.longitude,
+          resp.latitude
+        )
+        .subscribe(console.log);
     });
   }
 }

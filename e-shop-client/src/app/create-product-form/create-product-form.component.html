@@ -7,13 +7,21 @@
     (ngSubmit)="onSubmit()"
   >
     <div class="data-input-container">
-      <input
-        type="text"
-        class="create-input"
-        id="create-input"
-        placeholder="Ware House"
-        formControlName="wareHouse"
-      />
+      <div class="search-container">
+        <div class="search-box">
+          <select
+            class="search-input"
+            id="search-input"
+            formControlName="wareHouse"
+          >
+            <option value="" disabled selected>Select a Warehouse</option>
+            <option *ngFor="let war of warehouses$ | async" [value]="war.id">
+              {{ war.name }}
+            </option>
+          </select>
+        </div>
+        <button class="clear-btn btn">Clear</button>
+      </div>
       <div class="search-container">
         <div class="search-box">
           <select

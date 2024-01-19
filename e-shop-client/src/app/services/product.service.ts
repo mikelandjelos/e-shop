@@ -17,7 +17,7 @@ export class ProductService {
     category: any,
     wareHouse: any,
     image: File
-  ) :Observable<any>{
+  ): Observable<any> {
     const formData: FormData = new FormData();
 
     formData.append('name', title);
@@ -25,13 +25,11 @@ export class ProductService {
     formData.append('description', description);
     formData.append('stock', stock.toString());
     formData.append('category', category);
-    formData.append('wareHouse', wareHouse);
+    formData.append('warehouse', wareHouse);
     formData.append('file', image);
     const headers = new HttpHeaders();
     headers.set('Content-Type', 'multipart/form-data');
-   return this.httpClient
-      .post(environment.api + 'product', formData)
-     
+    return this.httpClient.post(environment.api + 'product', formData);
   }
   getProductImage(imageName: string): Observable<Blob> {
     const requestOptions: Object = { responseType: 'blob' };
@@ -88,16 +86,22 @@ export class ProductService {
     );
   }
 
-  follow(product: any,username:string): Observable<string> {
+  follow(product: any, username: string): Observable<string> {
     const id = product.id;
     console.log(id);
-    return this.httpClient.get(`${environment.api}product/subscribe/${id}/${username}`, {
-      responseType: 'text',
-    });
+    return this.httpClient.get(
+      `${environment.api}product/subscribe/${id}/${username}`,
+      {
+        responseType: 'text',
+      }
+    );
   }
-  publish(product: any,message:string): Observable<any> {
+  publish(product: any, message: string): Observable<any> {
     const id = product.id;
     console.log(id);
-    return this.httpClient.post(`${environment.api}product/publish/${id}/${message}`,{});
+    return this.httpClient.post(
+      `${environment.api}product/publish/${id}/${message}`,
+      {}
+    );
   }
 }

@@ -4,7 +4,6 @@ import { UpdateCustomerDto } from '../dto/update-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Customer } from '../entities/customer.entity';
-import { Observable, from } from 'rxjs';
 import * as bcrypt from 'bcrypt';
 import Redis from 'ioredis';
 @Injectable()
@@ -44,26 +43,24 @@ export class CustomerService {
   }
   async addLocationToGeoSet(
     username: string,
-  
     longitude: number,
     lattitude: number,
-  
   ): Promise<number> {
     const redis = new Redis({ host: 'localhost', port: 6389 });
-   
-    return redis.geoadd("users", longitude, lattitude, username);
+
+    return redis.geoadd('users', longitude, lattitude, username);
   }
 
-  async getCoordinatesForCity(username) {
+  async getCoordinatesForUser(username: string) {
     const redis = new Redis({ host: 'localhost', port: 6389 });
     const city = await redis.get(username);
-    const coordinates = await redis.geopos('City', city);
+    const coordinates = await redis.geopos('users', city);
     return coordinates[0];
   }
   async getCitiesInRange(username: string, range: number) {
     console.log(username, range);
     const redis = new Redis({ host: 'localhost', port: 6389 });
-    const coords = await this.getCoordinatesForCity(username);
+    const coords = await this.getCoordinatesForUser(username);
     const citiesInRange = await redis.georadius(
       'City',
       coords[0],
@@ -74,13 +71,11 @@ export class CustomerService {
     );
     return citiesInRange;
   }
-  async logout(username:string){
+  async logout(username: string) {
     const redis = new Redis({ host: 'localhost', port: 6389 });
     await redis.del(username);
-    
   }
-  async getUserCredentials(username:string)
-  {
+  async getUserCredentials(username: string) {
     console.log(username);
     const redis = new Redis({ host: 'localhost', port: 6389 });
     const obj = await redis.get(username);

@@ -1,9 +1,28 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+
+export type Warehouse = { id: string; name: string };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WarehouseService {
+  constructor(private httpClient: HttpClient) {}
 
-  constructor() { }
+  create(warehouseName: string, longitude: number, latitude: number) {
+    return this.httpClient.post<{ id: string; name: string }>(
+      environment.api + `warehouse/${longitude}/${latitude}`,
+      {
+        name: warehouseName,
+      }
+    );
+  }
+
+  findAll(): Observable<Warehouse[]> {
+    return this.httpClient.get<Warehouse[]>(
+      environment.api + 'warehouse/findAll'
+    );
+  }
 }

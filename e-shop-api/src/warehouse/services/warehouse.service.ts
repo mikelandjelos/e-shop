@@ -1,10 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
-import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
 import { Repository } from 'typeorm';
 import { Warehouse } from '../entities/warehouse.entity';
-import { WarehouseDto } from '../dto/warehouse.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { createClient } from 'redis';
 
 @Injectable()
 export class WarehouseService {
@@ -13,32 +11,81 @@ export class WarehouseService {
     public readonly warehouseRepository: Repository<Warehouse>,
   ) {}
 
-  async create(createWarehouseDto: CreateWarehouseDto): Promise<WarehouseDto> {
+  async create(
+    warehouse: Partial<Warehouse>,
+    longitude: number,
+    latitude: number,
+  ): Promise<Warehouse> {
     const createdWarehouse =
-      await this.warehouseRepository.save(createWarehouseDto);
+      await this.warehouseRepository.save<Partial<Warehouse>>(warehouse);
 
-    return WarehouseDto.fromEntity(createdWarehouse);
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6389' });
+
+    await redisClient.connect();
+
+    try {
+      await redisClient.geoAdd('warehouses', {
+        longitude: longitude,
+        latitude: latitude,
+        member: warehouse.id,
+      });
+    } finally {
+      await redisClient.disconnect();
+    }
+
+    return createdWarehouse;
   }
 
-  async findAll(): Promise<WarehouseDto[]> {
+  async getAllWarehouseIdsForRadius(
+    username: string,
+    radius: number,
+  ): Promise<string[]> {
+    const redisClient = await createClient({ url: 'redis://127.0.0.1:6389' });
+
+    await redisClient.connect();
+
+    let warehouseIds: string[] = [];
+
+    try {
+      const { longitude, latitude } = (
+        await redisClient.geoPos('users', username)
+      )[0];
+
+      console.log(longitude, latitude);
+      console.log(radius);
+
+      const returnedIds = await redisClient.geoSearch(
+        'warehouses',
+        { latitude: latitude, longitude: longitude },
+        { radius: radius, unit: 'km' },
+      );
+
+      console.log(returnedIds);
+
+      warehouseIds = warehouseIds.concat(returnedIds);
+    } finally {
+      await redisClient.disconnect();
+    }
+
+    return warehouseIds;
+  }
+
+  async findAll(): Promise<Warehouse[]> {
     const warehouses = await this.warehouseRepository.find();
-    return warehouses.map((warehouse) => WarehouseDto.fromEntity(warehouse));
+    return warehouses;
   }
 
-  async findOne(id: string): Promise<WarehouseDto> {
+  async findOne(id: string): Promise<Warehouse> {
     const warehouse = await this.warehouseRepository.findOneBy({ id });
 
     if (!warehouse) {
       throw new NotFoundException(`Warehouse with id '${id}' not found!`);
     }
 
-    return WarehouseDto.fromEntity(warehouse);
+    return warehouse;
   }
 
-  async update(
-    id: string,
-    updateWarehouseDto: UpdateWarehouseDto,
-  ): Promise<WarehouseDto> {
+  async update(id: string, updateWarehouseDto: Warehouse): Promise<Warehouse> {
     const warehouse = await this.warehouseRepository.findOneBy({ id });
 
     if (!warehouse) {
@@ -48,7 +95,7 @@ export class WarehouseService {
     this.warehouseRepository.merge(warehouse, updateWarehouseDto);
     const updatedWarehouse = await this.warehouseRepository.save(warehouse);
 
-    return WarehouseDto.fromEntity(updatedWarehouse);
+    return updatedWarehouse;
   }
 
   async remove(id: string): Promise<void> {
