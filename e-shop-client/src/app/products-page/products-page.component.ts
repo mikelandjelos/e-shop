@@ -5,7 +5,8 @@ import { Observable, from, of } from 'rxjs';
 import { ProductService } from '../services/product.service';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
-import { FiltersComponent } from '../filters/filters.component';import { forkJoin } from 'rxjs';
+import { FiltersComponent } from '../filters/filters.component';
+import { forkJoin } from 'rxjs';
 
 export interface Product {
   id: string;
@@ -26,7 +27,7 @@ export interface Product {
 })
 export class ProductsPageComponent implements OnInit {
   public categoryName: string = '';
-  public blobImages:any=[];
+  public blobImages: any = [];
   public changes: Observable<boolean> = of(false);
   public products$: Observable<{ products: any[]; total: number }> = from([]);
   constructor(
@@ -46,21 +47,23 @@ export class ProductsPageComponent implements OnInit {
 
     this.products$.subscribe((productsData) => {
       if (productsData.products && productsData.products.length > 0) {
-        const observables = productsData.products.map((product) => 
+        const observables = productsData.products.map((product) =>
           this.productService.getProductImage(product.image)
         );
-    
+
         forkJoin(observables).subscribe((responses) => {
           responses.forEach((respo, index) => {
             console.log(respo);
             const objectURL = URL.createObjectURL(respo);
             console.log(productsData.products[index]);
-            this.blobImages.push(this.domSanitizer.bypassSecurityTrustUrl(objectURL));
-           
-            productsData.products[index].blob=this.domSanitizer.bypassSecurityTrustUrl(objectURL);
+            this.blobImages.push(
+              this.domSanitizer.bypassSecurityTrustUrl(objectURL)
+            );
+
+            productsData.products[index].blob =
+              this.domSanitizer.bypassSecurityTrustUrl(objectURL);
             console.log(productsData.products[index].blob);
             if (index === productsData.products.length - 1) {
-             
               this.func();
             }
           });
@@ -77,11 +80,10 @@ export class ProductsPageComponent implements OnInit {
       queryParams: { category: category },
     });
   }
-  func()
-  {
-    console.log('a')
-    this.blobImages.forEach((el:any)=>console.log(el))
-    this.changes=of(true);
+  func() {
+    console.log('a');
+    this.blobImages.forEach((el: any) => console.log(el));
+    this.changes = of(true);
   }
   openPopup(product: any) {}
   logOut() {
@@ -94,8 +96,7 @@ export class ProductsPageComponent implements OnInit {
       objectURL
     ) as string;
   }
-  handleFiltersSelected(event: { search: string, range: number }) {
-   
+  handleFiltersSelected(event: { search: string; range: number }) {
     console.log('Filters selected:', event);
   }
 }

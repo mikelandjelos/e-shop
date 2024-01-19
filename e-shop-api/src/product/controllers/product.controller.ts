@@ -45,6 +45,19 @@ export class ProductController {
     return this.productService.create(createProductDto);
   }
 
+  @Get('findAllProductsForWarehouseIds/')
+  async findAllProductsForWarehouseIds(
+    @Query('pattern') pattern: string,
+    @Query('category') category: string,
+    @Body() warehouseIds: string[],
+  ) {
+    return await this.productService.findAllProductsForWarehouseIds(
+      pattern,
+      category,
+      warehouseIds,
+    );
+  }
+
   @Get('/getPost/:id')
   findOne(@Param('id') id: string) {
     return this.productService.findOne(id);
@@ -132,9 +145,12 @@ export class ProductController {
   }
 
   @Get('subscribe/:id/:username')
-  async subscribe(@Param('id') id: string, @Param('username')username:string) {
-    console.log(username)
-    return await this.productService.subscribe(id,username);
+  async subscribe(
+    @Param('id') id: string,
+    @Param('username') username: string,
+  ) {
+    console.log(username);
+    return await this.productService.subscribe(id, username);
   }
 
   @Post('publish/:id/:message')

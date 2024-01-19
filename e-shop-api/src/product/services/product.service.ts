@@ -6,7 +6,7 @@ import {
 import { CreateProductDto } from '../dto/create-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../entities/product.entity';
-import { Repository, FindOptions, FindManyOptions, ILike } from 'typeorm';
+import { Repository, FindManyOptions, ILike, In, ObjectLiteral } from 'typeorm';
 import Redis from 'ioredis';
 import { createClient } from 'redis';
 import path = require('path');
@@ -112,11 +112,17 @@ export class ProductService {
           //  await redisClient.ts.del(product.id,'-','+');
           //  console.log(ts)
           redisClient.disconnect();
-          const ok = await this.publish(productID,`${product.name} out of stock!`)
+          const ok = await this.publish(
+            productID,
+            `${product.name} out of stock!`,
+          );
           return await this.productRepository.delete(id);
         }
         await rC.zincrby('topSales', -count, product.id);
-        const ok = await this.publish(id,`${count} pieces of ${product.name} were sold`);
+        const ok = await this.publish(
+          id,
+          `${count} pieces of ${product.name} were sold`,
+        );
         await this.productRepository.update({ id }, { stock: product.stock });
 
         const productScore = await rC.zscore('stock', product.id);
@@ -257,6 +263,36 @@ export class ProductService {
     return result;
   }
 
+  async findAllProductsForWarehouseIds(
+    patternToMatch: string | undefined,
+    category: string | undefined,
+    warehouseIds: string[] | undefined,
+  ) {
+    const where: ObjectLiteral = {};
+
+    if (warehouseIds && warehouseIds.length > 0) {
+      where.warehouse = { id: In(warehouseIds) };
+    }
+
+    if (patternToMatch) {
+      where.name = ILike(`%${patternToMatch}%`);
+    }
+
+    if (category) {
+      where.category = ILike(`%${category}%`);
+    }
+
+    const options: FindManyOptions<Product> = {
+      where,
+      relations: ['category', 'warehouse'],
+    };
+
+    const [products, total] =
+      await this.productRepository.findAndCount(options);
+
+    return [products, total];
+  }
+
   async bulkCreate(createProductDtos: CreateProductDto[]): Promise<Product[]> {
     // Validate the input to ensure it's an array of CreateProductDto objects
     if (!Array.isArray(createProductDtos) || createProductDtos.length === 0) {
@@ -392,7 +428,7 @@ export class ProductService {
     await Promise.all(deletionPromises);
   }
 
-  async subscribe(productId: string, username:string): Promise<string> {
+  async subscribe(productId: string, username: string): Promise<string> {
     const rcN = await new Redis({ port: 6389, host: 'localhost' });
     await rcN.subscribe(productId);
     await rcN.on('message', (channel, message) => {
