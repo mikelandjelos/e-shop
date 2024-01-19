@@ -18,6 +18,7 @@ export class ShoppingCartComponent {
    outOfStockImages: any = [];
    constructor(private productService: ProductService, private sanitizer: DomSanitizer, private router:Router, private dialog:MatDialog) {
     this.productService.getAllFromCart().subscribe((respo) => {
+      console.log(respo)
       this.products = respo.map((product:any) => ({
         ...product,
         safeBlobUrl: this.sanitizer.bypassSecurityTrustUrl(product.blob),

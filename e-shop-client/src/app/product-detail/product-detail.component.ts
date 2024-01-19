@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ProductService } from '../services/product.service';
 import { io } from 'socket.io-client';
+import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,7 +17,7 @@ export class ProductDetailComponent {
   lastView: any;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private productService: ProductService
+    private productService: ProductService,private dialog:MatDialog
   ) {
     this.username = localStorage.getItem('username') ?? '';
 
@@ -43,9 +44,21 @@ export class ProductDetailComponent {
   addToCart(product: any) {
     this.productService
       .setToCart(product)
-      .subscribe((respo) => console.log(respo));
+      .subscribe((respo) => { this.dialog.open(NotificationPopupComponent, {
+        data: {
+          title: 'Notification',
+          text: 'The product has been added to the cart',
+        },
+      });});
   }
   follow(product: any) {
-    this.productService.follow(product,this.username).subscribe(console.log);
+    this.productService.follow(product,this.username).subscribe((respo)=>{
+      this.dialog.open(NotificationPopupComponent, {
+        data: {
+          title: 'Notification',
+          text: 'Product was followed',
+        },
+      });
+    });
   }
 }

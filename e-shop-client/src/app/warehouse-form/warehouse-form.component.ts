@@ -9,8 +9,9 @@ import {
 import { IonicModule } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { GeoService } from '../services/geo.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { WarehouseService } from '../services/warehouse.service';
+import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
 @Component({
   selector: 'app-warehouse-form',
   standalone: true,
@@ -25,7 +26,7 @@ export class WarehouseFormComponent {
     private geoService: GeoService,
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<WarehouseFormComponent>,
-    private warehouseService: WarehouseService
+    private warehouseService: WarehouseService, private dialog:MatDialog
   ) {
     this.wareHouseForm = this.formBuilder.group({
       wareHouse: '',
@@ -104,7 +105,16 @@ export class WarehouseFormComponent {
           resp.longitude,
           resp.latitude
         )
-        .subscribe(console.log);
+        .subscribe(
+          (respo)=>{console.log(respo);
+            this.dialog.open(NotificationPopupComponent, {
+              data: {
+                title: 'Notification',
+                text: 'WareHouse was created',
+              },
+            });
+          }
+        );
     });
   }
 }
