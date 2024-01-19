@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FiltersComponent } from '../filters/filters.component';
 import { forkJoin } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductDetailComponent } from '../product-detail/product-detail.component';
 
 export interface Product {
   id: string;
@@ -21,7 +23,12 @@ export interface Product {
 @Component({
   selector: 'app-products-page',
   standalone: true,
-  imports: [HeaderComponent, CommonModule, FiltersComponent],
+  imports: [
+    HeaderComponent,
+    CommonModule,
+    FiltersComponent,
+    ProductDetailComponent,
+  ],
   templateUrl: './products-page.component.html',
   styleUrl: './products-page.component.scss',
 })
@@ -34,7 +41,8 @@ export class ProductsPageComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private router: Router,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    public dialog: MatDialog
   ) {}
   ngOnInit(): void {
     this.categoryName = this.route.snapshot.queryParamMap.get('category') ?? '';
@@ -85,7 +93,13 @@ export class ProductsPageComponent implements OnInit {
     this.blobImages.forEach((el: any) => console.log(el));
     this.changes = of(true);
   }
-  openPopup(product: any) {}
+  openPopup(product: any): void {
+    this.dialog.open(ProductDetailComponent, {
+      width: '800px',
+      height: '630px',
+      data: { product: product },
+    });
+  }
   logOut() {
     throw Error;
   }
