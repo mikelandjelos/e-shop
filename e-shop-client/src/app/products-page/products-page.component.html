@@ -1,20 +1,18 @@
 <body>
   <app-header></app-header>
-  
-  
+
   <section id="sellers">
     <div class="seller container" *ngIf="changes | async">
-     
-      <div class="best-seller" *ngIf="(products$ | async) as products">
-        <div *ngFor="let product of products.products"
+      <div class="best-seller" *ngIf="products$ | async as products">
+        <div
+          *ngFor="let product of products.products"
           class="best-p1"
-          
           (click)="openPopup('')"
         >
-        <img [src]="product.blob" alt="Product Image" />
-        <div class="best-p1-txt">
+          <img [src]="product.blob" alt="Product Image" />
+          <div class="best-p1-txt">
             <div class="name-of-p">
-              <p >{{ product.name }}</p>
+              <p>{{ product.name }}</p>
             </div>
             <div class="rating">
               <i class="bx bxs-star"></i>
@@ -24,7 +22,7 @@
               <i class="bx bx-star"></i>
             </div>
             <div class="price">
-              &dollar;{{ product.price  }}
+              &dollar;{{ product.price }}
               <div class="colors">
                 <i class="bx bxs-circle red"></i>
                 <i class="bx bxs-circle blue"></i>
@@ -38,9 +36,5 @@
         </div>
       </div>
     </div>
-    
-    
-      
-  
   </section>
 </body>

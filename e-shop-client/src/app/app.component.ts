@@ -1,3 +1,4 @@
+import { ProductsPageComponent } from './products-page/products-page.component';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
@@ -17,6 +18,7 @@ import { environment } from '../environments/environment';
     LoginComponent,
     FrontPageComponent,
     CreateProductFormComponent,
+    ProductsPageComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

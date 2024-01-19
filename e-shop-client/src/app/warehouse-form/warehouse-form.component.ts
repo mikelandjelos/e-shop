@@ -15,17 +15,21 @@ import { MatDialogRef } from '@angular/material/dialog';
   standalone: true,
   imports: [IonicModule, CommonModule, ReactiveFormsModule],
   templateUrl: './warehouse-form.component.html',
-  styleUrl: './warehouse-form.component.scss'
+  styleUrl: './warehouse-form.component.scss',
 })
 export class WarehouseFormComponent {
   wareHouseForm: FormGroup;
   suggestions: string[] = [];
-  constructor(  private geoService: GeoService,    private formBuilder: FormBuilder,private dialogRef: MatDialogRef<WarehouseFormComponent>
-    ){this.wareHouseForm = this.formBuilder.group({
-   wareHouse:'',
-    location: ''
-    
-  });}
+  constructor(
+    private geoService: GeoService,
+    private formBuilder: FormBuilder,
+    private dialogRef: MatDialogRef<WarehouseFormComponent>
+  ) {
+    this.wareHouseForm = this.formBuilder.group({
+      wareHouse: '',
+      location: '',
+    });
+  }
   selectSuggestion(suggestion: string): void {
     console.log(suggestion);
     this.wareHouseForm.get('location')?.setValue(suggestion);
@@ -86,7 +90,12 @@ export class WarehouseFormComponent {
       );
     });
   }
-  async onSubmit(){
+  async onSubmit() {
     console.log(this.wareHouseForm.value.location);
+    this.getCoordinates(this.wareHouseForm.value.location).subscribe((resp) => {
+      console.log(this.wareHouseForm.value.wareHouse);
+      console.log(resp.longitude);
+      console.log(resp.lattitude);
+    });
   }
 }

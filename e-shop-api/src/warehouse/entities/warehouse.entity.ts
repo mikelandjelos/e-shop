@@ -8,8 +8,8 @@ export class Warehouse {
 
   // LOCATION???
 
-  @Column({ type: 'varchar', name: 'phone', length: 50, unique: true })
-  phone: string;
+  @Column({ type: 'varchar', name: 'name', length: 50, unique: true })
+  name: string;
 
   @OneToMany(() => Product, (product) => product.warehouse)
   products: Product[];
