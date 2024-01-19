@@ -11,6 +11,8 @@ import { HeaderComponent } from '../header/header.component';
 import { LoginService } from '../services/login.service';
 import { Category, CategoryService } from '../services/category.service';
 import { Observable, from } from 'rxjs';
+import { Socket, io } from 'socket.io-client';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-front-page',
@@ -33,6 +35,9 @@ export class FrontPageComponent implements OnInit {
   username: any;
 
   categories$: Observable<Category[]> = from([]);
+
+  private socket!: Socket;
+  notifications: any[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -124,7 +129,7 @@ export class FrontPageComponent implements OnInit {
             this.createImageFromBlob(respo, 0);
 
             product.blob = this.topSalesImages[index];
-            console.log(product.blob)
+            console.log(product.blob);
             if (product.blob == undefined) {
               this.createImageFromBlob(respo, 0);
 

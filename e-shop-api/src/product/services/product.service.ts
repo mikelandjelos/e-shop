@@ -10,13 +10,16 @@ import { Repository, FindOptions, FindManyOptions, ILike } from 'typeorm';
 import Redis from 'ioredis';
 import { createClient } from 'redis';
 import path = require('path');
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { AppGateway } from 'src/app/app.gateway';
+import { emit } from 'process';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     public readonly productRepository: Repository<Product>,
+    public readonly appGateway: AppGateway,
   ) {}
 
   public readonly PAGE_CACHE_EXPIRATION: number = 120;
@@ -372,24 +375,6 @@ export class ProductService {
     await Promise.all(deletionPromises);
   }
 
-  async subscribe(productId: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const rcN = new Redis({ port: 6389, host: 'localhost' });
-
-      rcN.subscribe(productId);
-
-      rcN.on('message', (channel, message) => {
-        const result = `Poruka na kanalu ${channel}: ${message}`;
-        console.log(result);
-        resolve(result);
-      });
-    });
-  }
-  async publishToChannel(productId: string, message: string) {
-    const rcN = new Redis({ port: 6389, host: 'localhost' });
-
-    rcN.publish(productId, message);
-  }
   async deleteAllKeys() {
     const rCN = new Redis({ port: 6389, host: 'localhost' });
     const rC = new Redis({ port: 6390, host: 'localhost' });
@@ -405,5 +390,25 @@ export class ProductService {
     });
 
     await Promise.all(deletionPromises);
+  }
+
+  async subscribe(productId: string): Promise<string> {
+    const rcN = await new Redis({ port: 6389, host: 'localhost' });
+    await rcN.subscribe(productId);
+    await rcN.on('message', (channel, message) => {
+      const result = `Poruka na kanalu ${channel}: ${message}`;
+      console.log(result);
+      this.appGateway.server.emit('notification', {
+        channel: productId,
+        message: message,
+      });
+    });
+    return `Succesfully subscribed to ${productId}!`;
+  }
+
+  async publish(productId: string, message: string): Promise<string> {
+    const rcN = await new Redis({ port: 6389, host: 'localhost' });
+    await rcN.publish(productId, message);
+    return `Succesfully published "${message}" to ${productId}!`;
   }
 }

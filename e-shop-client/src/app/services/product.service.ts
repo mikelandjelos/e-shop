@@ -58,13 +58,6 @@ export class ProductService {
       {}
     );
   }
-  follow(product: any): Observable<string> {
-    const id = product.id;
-    console.log(id);
-    return this.httpClient.get(`${environment.api}product/subscribe/${id}`, {
-      responseType: 'text',
-    });
-  }
   setToCart(product: any) {
     return this.httpClient.post(`${environment.api}product/setInCache`, {
       product,
@@ -82,6 +75,7 @@ export class ProductService {
   deleteAllFromCart() {
     return this.httpClient.delete(`${environment.api}product/DeleteFromCache`);
   }
+
   getPaginatedFromCategory(
     page: number = 1,
     pageSize: number = 10,
@@ -92,5 +86,13 @@ export class ProductService {
         `product/paginated?page=${page}&pageSize=${pageSize}` +
         (categoryName ? `&category=${categoryName}` : '')
     );
+  }
+
+  follow(product: any): Observable<string> {
+    const id = product.id;
+    console.log(id);
+    return this.httpClient.get(`${environment.api}product/subscribe/${id}`, {
+      responseType: 'text',
+    });
   }
 }

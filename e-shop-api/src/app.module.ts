@@ -13,6 +13,7 @@ import { CategoryModule } from './category/category.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { OrderItemModule } from './order-item/order-item.module';
 import { PaymentModule } from './payment/payment.module';
+import { AppGateway } from './app/app.gateway';
 
 @Module({
   imports: [
@@ -41,7 +42,7 @@ import { PaymentModule } from './payment/payment.module';
     WarehouseModule,
   ],
   controllers: [AppController, GeoController],
-  providers: [AppService, GeoService],
+  providers: [AppService, GeoService, AppGateway],
 })
 export class AppModule {
   constructor() {}

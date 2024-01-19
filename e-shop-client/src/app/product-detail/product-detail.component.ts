@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProductService } from '../services/product.service';
+import { io } from 'socket.io-client';
 
 @Component({
   selector: 'app-product-detail',
@@ -42,16 +43,6 @@ export class ProductDetailComponent {
       .subscribe((respo) => console.log(respo));
   }
   follow(product: any) {
-    this.productService.follow(product).subscribe(
-      (value) => {
-        console.log('Vrednost:', value);
-      },
-      (error) => {
-        console.error('Greška:', error);
-      },
-      () => {
-        console.log('Pretplata je završena.');
-      }
-    );
+    this.productService.follow(product).subscribe(console.log);
   }
 }

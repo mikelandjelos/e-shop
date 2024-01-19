@@ -5,6 +5,7 @@ import { GeoComponent } from './geo/geo.component';
 import { LoginComponent } from './login/login.component';
 import { FrontPageComponent } from './front-page/front-page.component';
 import { CreateProductFormComponent } from './create-product-form/create-product-form.component';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ import { CreateProductFormComponent } from './create-product-form/create-product
     GeoComponent,
     LoginComponent,
     FrontPageComponent,
-    CreateProductFormComponent
+    CreateProductFormComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
