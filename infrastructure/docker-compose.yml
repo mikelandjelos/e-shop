@@ -8,6 +8,8 @@ services:
       POSTGRES_PASSWORD: nbp
     ports:
       - "5442:5432"
+    networks:
+      - nbp
 
   redis-stack-durable:
     image: redis/redis-stack-server:latest
@@ -15,14 +17,24 @@ services:
     ports:
       - "6389:6379"
     volumes:
-      - ./redis/data/durable/:/data/
+      # Create directory on this path first, then uncomment
+      # - ./redis/data/durable/:/data/
       - ./redis/config/redis-stack-durable.conf:/redis-stack.conf
+    networks:
+      - nbp
 
   redis-stack-cache:
-    image: redis/redis-stack-server:latest
+    # Create directory on this path first, then uncomment
+    # image: redis/redis-stack-server:latest
     container_name: nbp-redis-stack-cache
     ports:
       - "6390:6379"
     volumes:
       - ./redis/data/cache/:/data/
       - ./redis/config/redis-stack-cache.conf:/redis-stack.conf
+    networks:
+      - nbp
+
+networks:
+  nbp:
+    name: nbp
