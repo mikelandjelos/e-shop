@@ -99,11 +99,12 @@ export class ProductsPageComponent implements OnInit {
     this.blobImages.forEach((el: any) => console.log(el));
     this.changes = of(true);
   }
-  openPopup(product: any): void {
+  openPopup(product: any, i: number): void {
+    const blob = this.blobImages[i];
     this.dialog.open(ProductDetailComponent, {
       width: '800px',
       height: '630px',
-      data: { product: product },
+      data: { product: product, blob: blob },
     });
   }
   logOut() {

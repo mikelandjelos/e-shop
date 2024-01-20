@@ -7,17 +7,19 @@ import {
 import { ProductService } from '../services/product.service';
 import { io } from 'socket.io-client';
 import { NotificationPopupComponent } from '../notification-popup/notification-popup.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css',
 })
 export class ProductDetailComponent {
   numberOfViews = null;
   username: string;
+  blob: boolean;
 
   lastView: any;
   constructor(
@@ -29,6 +31,13 @@ export class ProductDetailComponent {
 
     this.lastView = new Date();
     console.log('Product details:', data.product);
+
+    if (data.blob != undefined) {
+      this.blob = true;
+    } else {
+      this.blob = false;
+    }
+
     productService
       .getLastMeasuredValue(data.product.id)
       .subscribe((respo: any) => {

@@ -10,7 +10,7 @@
         <div
           *ngFor="let product of products.products; let i = index"
           class="best-p1"
-          (click)="openPopup(product)"
+          (click)="openPopup(product, i)"
         >
           <img [src]="blobImages[i]" alt="Product Image" />
           <div class="best-p1-txt">

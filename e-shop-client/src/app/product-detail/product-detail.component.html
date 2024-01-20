@@ -11,8 +11,11 @@
           ${{ data.product.price }}<span class="product-price-cents"></span>
         </div>
       </div>
-      <div class="product-image">
+      <div class="product-image" *ngIf="!blob">
         <img [src]="data.product.blob" />
+      </div>
+      <div class="product-image" *ngIf="blob">
+        <img [src]="data.blob" />
       </div>
       <button class="button" (click)="addToCart(data.product)">
         Add to Cart
