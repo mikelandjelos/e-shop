@@ -48,7 +48,7 @@
       <div class="best-seller" *ngIf="changeSales">
         <div
           class="best-p1"
-          *ngFor="let product of topSales;let i = index"
+          *ngFor="let product of topSales; let i = index"
           (click)="openPopup(product)"
         >
           <img [src]="topSalesImages[i]" alt="https://picsum.photos" />
@@ -83,7 +83,7 @@
       <div class="best-seller" *ngIf="changeArrivals">
         <div
           class="best-p1"
-          *ngFor="let product of newArrivals;let i = index"
+          *ngFor="let product of newArrivals; let i = index"
           (click)="openPopup(product)"
         >
           <img [src]="newArrivalsImages[i]" alt="img" />
@@ -118,7 +118,7 @@
       <div class="best-seller" *ngIf="changeOutOfStock">
         <div
           class="best-p1"
-          *ngFor="let product of outOfStock;let i = index"
+          *ngFor="let product of outOfStock; let i = index"
           (click)="openPopup(product)"
         >
           <img [src]="outOfStockImages[i]" alt="img" />

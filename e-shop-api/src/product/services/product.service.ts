@@ -279,11 +279,11 @@ export class ProductService {
     }
 
     if (patternToMatch) {
-      where.name = ILike(patternToMatch);
+      where.name = ILike(`%${patternToMatch}%`);
     }
 
     if (category) {
-      where.category = { name: ILike(category) };
+      where.category = { name: ILike(`%${category}%`) };
     }
 
     const options: FindManyOptions<Product> = {
@@ -291,15 +291,15 @@ export class ProductService {
       relations: ['category', 'warehouse'],
     };
 
-    const [products, total] = await this.productRepository.findAndCount({
-      where: {
-        category: category ? { name: ILike(category) } : {},
-        warehouse: { id: In(warehouseIds) },
-      },
-      relations: ['category', 'warehouse'],
-    });
-
-    return { products, total };
+    try {
+      const [products, total] =
+        await this.productRepository.findAndCount(options);
+      console.log({ products, total });
+      return { products, total };
+    } catch (error) {
+      console.error('Error querying products:', error);
+      throw error; // Rethrow the error to propagate it up the call stack
+    }
   }
 
   async bulkCreate(createProductDtos: CreateProductDto[]): Promise<Product[]> {

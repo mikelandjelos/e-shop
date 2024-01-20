@@ -132,6 +132,7 @@ export class ProductsPageComponent implements OnInit {
       );
 
     this.products$.subscribe((productsData) => {
+      console.log(productsData);
       if (productsData.products && productsData.products.length > 0) {
         const observables = productsData.products.map((product) =>
           this.productService.getProductImage(product.image)
